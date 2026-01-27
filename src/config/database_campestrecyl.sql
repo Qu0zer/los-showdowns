@@ -1,6 +1,6 @@
--- Crear la base de datos (opcional)
-CREATE DATABASE IF NOT EXISTS gestion_campings;
-USE gestion_campings;
+-- Crear la base de datos (si no existe)
+CREATE DATABASE IF NOT EXISTS campestrecyl_campings;
+USE campestrecyl_campings;
 
 -- ================================
 -- Tabla Usuarios
@@ -28,6 +28,8 @@ CREATE TABLE Campings (
     email VARCHAR(255) NOT NULL,
     web VARCHAR(255),
     plazas INT,
+    latitud DECIMAL(10, 8) NOT NULL,
+    longitud DECIMAL(11, 9) NOT NULL,
     PRIMARY KEY (id)
 ) ENGINE=InnoDB;
 
@@ -41,18 +43,6 @@ CREATE TABLE Favoritos (
     PRIMARY KEY (id),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_camping) REFERENCES Campings(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-
--- ================================
--- Tabla Posicion (Relación 1:1 con Campings)
--- ================================
-CREATE TABLE Posicion (
-    id INT(11) NOT NULL AUTO_INCREMENT,
-    latitud DECIMAL(10, 8) NOT NULL,
-    longitud DECIMAL(11, 9) NOT NULL,
-    id_campings INT(11) NOT NULL UNIQUE,
-    PRIMARY KEY (id),
-    FOREIGN KEY (id_campings) REFERENCES Campings(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- ================================
