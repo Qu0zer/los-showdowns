@@ -1,0 +1,14 @@
+{
+    "name": "jorge.torfer.1/los-showdowns",
+    "autoload": {
+        "psr-4": {
+            "JorgeTorfer1\\LosShowdowns\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Jorge Toribio y Asier Sanz"
+        }
+    ],
+    "require": {}
+}
