@@ -1,5 +1,9 @@
 <?php
 namespace Models;
+
+use PDO;
+use PDOException;
+
 class Imagenes {
     private $id;
     private $nombre_fichero;
