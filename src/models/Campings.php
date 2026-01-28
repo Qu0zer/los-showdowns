@@ -5,7 +5,7 @@ use PDO;
 use PDOException;
 
 class Campings{
-    private $id;
+    private $n_registro;
     private $nombre_camping;
     private $direccion;
     private $provincia;
@@ -22,7 +22,7 @@ class Campings{
     // Constructor de los campings
     public function __construct($data = []){
         if(!empty($data)){
-            $this->id = $data['id'] ?? null;
+            $this->n_registro = $data['n_registro'] ?? null;
             $this->nombre_camping = $data['nombre_camping'] ?? null;
             $this->direccion = $data['direccion'] ?? null;
             $this->provincia = $data['provincia'] ?? null;
@@ -39,7 +39,7 @@ class Campings{
     }
 
     // GETTERS de los campings
-    public function getId(){ return $this->id; }
+    public function getRegistro(){ return $this->n_registro; }
 
     public function getNombre(){ return $this->nombre_camping; }
 
@@ -84,13 +84,14 @@ class Campings{
     public function saveCampings($pdo){
         try{
             // En caso de que sea la primera vez que guardamos un camping
-            if(!isset($this->id)){
+            if(!isset($this->n_registro)){
                 $sql = "
-                INSERT INTO campings (nombre_camping, direccion, provincia, municipio, localidad, telefono, email, web, plazas, latitud, longitud) 
-                VALUES (:nombre_camping, :direccion, :provincia, :municipio, :localidad, :telefono, :email, :web, :plazas, :latitud, :longitud)
+                INSERT INTO campings (n_registro, nombre_camping, direccion, provincia, municipio, localidad, telefono, email, web, plazas, latitud, longitud) 
+                VALUES (:n_registro, :nombre_camping, :direccion, :provincia, :municipio, :localidad, :telefono, :email, :web, :plazas, :latitud, :longitud)
                 ";
                 $sentence = $pdo->prepare($sql);
                 $sentence->execute([
+                    ':n_registro' => $this->n_registro,
                     ':nombre_camping' => $this->nombre_camping,
                     ':direccion' => $this->direccion,
                     ':provincia' => $this->provincia,
@@ -105,10 +106,11 @@ class Campings{
                 ]);
                 return true;
             // En caso de que ya exista ese camping sobreescribimos la información actualizada
-            } else if(isset($this->id)){
+            } else if(isset($this->n_registro)){
                 $sql = 'UPDATE campings SET nombre_camping = :nombre_camping, direccion = :direccion, provincia = :provincia, municipio = :municipio, localidad = :localidad, telefono = :telefono, email = :email, web = :web, plazas = :plazas, latitud = :latitud, longitud = :longitud';
                 $sentence = $pdo ->prepare($sql);
                 $sentence->execute([
+                    ':n_registro' => $this->n_registro,
                     ':nombre_camping' => $this->nombre_camping,
                     ':direccion' => $this->direccion,
                     ':provincia' => $this->provincia,
