@@ -89,7 +89,7 @@ function registrarUsuario(nombre, email, password, mensajeExito) {
     
     // Redirigir al login después de 2 segundos
     setTimeout(() => {
-        window.location.href = 'Inicio-Sesión.html';
+        window.location.href = 'index.php?action=login';
     }, 2000);
 }
 

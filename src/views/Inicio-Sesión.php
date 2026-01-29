@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - CampestresCyL</title>
-    <link rel="stylesheet" href="../../public/css/Inicio-Sesión.css">
+    <link rel="stylesheet" href="./css/Inicio-Sesión.css">
 </head>
 <body>
-    <a href="CampestresCyL.html" class="btn-volver">← Volver al Mapa</a>
+    <a href="index.php?action=inicio" class="btn-volver">← Volver al Mapa</a>
     
     <div class="contenedor-login">
         <div class="card-login">
-            <img src="../../public/images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-login">
+            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-login">
             
             <h1>Iniciar Sesión</h1>
             <p>Accede a tu cuenta de CampestresCyL</p>
@@ -20,7 +20,7 @@
                 Usuario o contraseña incorrectos
             </div>
             
-            <form id="formLogin" action="#" method="POST">
+            <form id="formLogin" action="index.php?action=procesarLogin" method="POST">
                 <div class="form-grupo">
                     <label for="email">📧 Email o Usuario:</label>
                     <input type="text" id="email" name="email" required placeholder="tu@email.com">
@@ -35,13 +35,13 @@
             </form>
             
             <div class="enlaces-adicionales">
-                <a href="Registro.html">¿No tienes cuenta? Regístrate</a>
+                <a href="index.php?action=registro">¿No tienes cuenta? Regístrate</a>
                 <br><br>
-                <a href="#" onclick="alert('Funcionalidad próximamente')">¿Olvidaste tu contraseña?</a>
+                <!--<a href="#" onclick="alert('Funcionalidad próximamente')">¿Olvidaste tu contraseña?</a>-->
             </div>
         </div>
     </div>
 
-    <script src="../../public/js/Inicio-Sesión.js"></script>
+    <script src="./js/Inicio-Sesión.js"></script>
 </body>
 </html>

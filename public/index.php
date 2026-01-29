@@ -1,4 +1,5 @@
 <?php
+    require_once dirname(__DIR__) . '/vendor/autoload.php';
     session_start();
 
     require_once dirname(__DIR__) . '/src/config/db.php'; // Conexión a la base de datos
@@ -10,11 +11,10 @@
     }*/
     $uri = $_SERVER['REQUEST_URI'];
     // Dirigir al tipo de enrutamiento en función de la URL asignada
-    /*if(strpos($uri, '/api/') === 0){
+    if(strpos($uri, '/api/') === 0){
         require_once dirname(__DIR__) . '/routes/api.php';
     } else {
-        require_once dirname(__DIR__) . '/routes/route.php';
-    }*/
-    require_once dirname(__DIR__) . '/routes/api.php';
+        require_once dirname(__DIR__) . '/routes/web.php';
+    }
 
 ?>

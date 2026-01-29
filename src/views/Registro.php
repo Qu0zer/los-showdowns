@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - CampestresCyL</title>
-    <link rel="stylesheet" href="../../public/css/Registro.css">
+    <link rel="stylesheet" href="./css/Registro.css">
 </head>
 <body>
-    <a href="CampestresCyL.html" class="btn-volver">← Volver al Mapa</a>
+    <a href="index.php?action=inicio" class="btn-volver">← Volver al Mapa</a>
     
     <div class="contenedor-registro">
         <div class="card-registro">
-            <img src="../../public/images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-registro">
+            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-registro">
             
             <h1>Crear Cuenta</h1>
             <p>Únete a la comunidad de CampestresCyL</p>
@@ -24,7 +24,7 @@
                 ¡Cuenta creada exitosamente! Redirigiendo...
             </div>
             
-            <form id="formRegistro" action="#" method="POST">
+            <form id="formRegistro" action="index.php?action=procesarRegistro" method="POST">
                 <div class="form-grupo">
                     <label for="nombre">👤 Nombre completo:</label>
                     <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
@@ -54,11 +54,11 @@
             </form>
             
             <div class="enlaces-adicionales">
-                <a href="Inicio-Sesión.html">¿Ya tienes cuenta? Inicia sesión</a>
+                <a href="index.php?action=login">¿Ya tienes cuenta? Inicia sesión</a>
             </div>
         </div>
     </div>
 
-    <script src="../../public/js/Registro.js"></script>
+    <script src="./js/Registro.js"></script>
 </body>
 </html>

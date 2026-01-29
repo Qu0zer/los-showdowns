@@ -1,6 +1,5 @@
 <?php
     try{
-        require_once dirname(__DIR__) . '/vendor/autoload.php';
         header('Content-Type: application/json');
 
         function apiSummon($apiUrl){
@@ -57,6 +56,7 @@
         }
 
     }catch(Exception $e){
+        http_response_code(500);
         header('HTTP/1.1 500 Internal Server Error');
         header('Content-Type: application/json');
     }

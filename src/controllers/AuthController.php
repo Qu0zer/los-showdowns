@@ -23,16 +23,16 @@
 
         // Función para procesar el registro
         public function procesarRegistro($pdo) {
-            $username = htmlspecialchars(trim($_POST['username'] ?? ''));
+            $username = htmlspecialchars(trim($_POST['nombre'] ?? ''));
             $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
             $password = htmlspecialchars($_POST['password'] ?? '');
             if(!empty($username) && !empty($password) && !empty($email)){
                 // Llamamos a registro para que se aplique
                 if(Usuario::register($pdo, $username, $email, $password)){
-                    header('Location: index.php?action=mostrarLogin');
+                    header('Location: index.php?action=login');
                     exit();
                 } else {
-                    header('Location: index.php?action=mostrarRegistro');
+                    header('Location: index.php?action=registro');
                     exit();
                 } 
             }

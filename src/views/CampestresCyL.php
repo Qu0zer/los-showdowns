@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../public/css/CampestresCyL.css">
+    <link rel="stylesheet" href="./css/CampestresCyL.css">
     <title>CampestresCyL</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
@@ -12,12 +12,12 @@
     <div class="contenido-cabecera">
         <h1>CampestresCyL</h1>
         <div class="botones-superiores">
-            <a href="Inicio-Sesión.html"><button class="boton-estilo">⭐ Inicio-sesion</button></a>
-            <a href="Registro.html"><button class="boton-estilo">⭐ Registrarse</button></a>
+            <a href="index.php?action=login"><button class="boton-estilo">⭐ Inicio-sesion</button></a>
+            <a href="index.php?action=registro"><button class="boton-estilo">⭐ Registrarse</button></a>
         </div>
-        <img src="../../public/images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
+        <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
         <div class="acciones">
-            <a href="Favoritos.html">
+            <a href="index.php?action=favoritos">
                 <button class="boton-estilo">⭐ Favoritos</button>
             </a>
         </div>
@@ -37,6 +37,6 @@
     <p>&copy; 2026 CampestresCyL. Todos los derechos reservados.</p>
 </footer>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="../../public/js/CampestresCyL.js"></script>
+<script src="./js/CampestresCyL.js"></script>
 </body>
 </html>

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (email && password) {
                 // Login exitoso - redirigir al mapa
                 alert('¡Bienvenido a CampestresCyL!');
-                window.location.href = 'CampestresCyL.html';
+                window.location.href = 'index.php?action=inicio';
             } else {
                 // Mostrar error
                 mensajeError.style.display = 'block';
