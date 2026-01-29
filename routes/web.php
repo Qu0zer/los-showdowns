@@ -9,17 +9,13 @@
             'intro' => 'intro',
             'logout' => 'logout'
         ];
-
         $allowedViewsAuth = [
             'procesarLogin' => 'procesarLogin',
             'procesarRegistro' => 'procesarRegistro',
             
         ];
-
         $action = $_GET['action'] ?? 'intro';
-
         // Enrutamientos para mostrar las principales vistas
-        
         if(isset($allowedViewsWeb[$action]) && $method === 'GET'){
             $controllerMethod = $allowedViewsWeb[$action];
             $webController->$controllerMethod($pdo);
