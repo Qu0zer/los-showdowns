@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - CampestresCyL</title>
+    <link rel="stylesheet" href="../../public/css/Inicio-Sesión.css">
+</head>
+<body>
+    <a href="CampestresCyL.html" class="btn-volver">← Volver al Mapa</a>
+    
+    <div class="contenedor-login">
+        <div class="card-login">
+            <img src="../../public/images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-login">
+            
+            <h1>Iniciar Sesión</h1>
+            <p>Accede a tu cuenta de CampestresCyL</p>
+            
+            <div class="mensaje-error" id="mensajeError">
+                Usuario o contraseña incorrectos
+            </div>
+            
+            <form id="formLogin" action="#" method="POST">
+                <div class="form-grupo">
+                    <label for="email">📧 Email o Usuario:</label>
+                    <input type="text" id="email" name="email" required placeholder="tu@email.com">
+                </div>
+                
+                <div class="form-grupo">
+                    <label for="password">🔒 Contraseña:</label>
+                    <input type="password" id="password" name="password" required placeholder="Tu contraseña">
+                </div>
+                
+                <button type="submit" class="btn-login">🔐 Iniciar Sesión</button>
+            </form>
+            
+            <div class="enlaces-adicionales">
+                <a href="Registro.html">¿No tienes cuenta? Regístrate</a>
+                <br><br>
+                <a href="#" onclick="alert('Funcionalidad próximamente')">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Manejo básico del formulario
+        document.getElementById('formLogin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const mensajeError = document.getElementById('mensajeError');
+            
+            // Simulación de login (aquí conectarías con tu backend)
+            if (email && password) {
+                // Login exitoso - redirigir al mapa
+                alert('¡Bienvenido a CampestresCyL!');
+                window.location.href = 'CampestresCyL.html';
+            } else {
+                // Mostrar error
+                mensajeError.style.display = 'block';
+                setTimeout(() => {
+                    mensajeError.style.display = 'none';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

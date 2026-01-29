@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../public/css/CampestresCyL.css">
+    <title>CampestresCyL</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body> 
+<header class="cabecera">
+    <div class="contenido-cabecera">
+        <h1>CampestresCyL</h1>
+        <div class="botones-superiores">
+            <a href="Inicio-Sesión.html"><button class="boton-estilo">⭐ Inicio-sesion</button></a>
+            <a href="registro.html"><button class="boton-estilo">⭐ Registrarse</button></a>
+        </div>
+        <img src="../../public/images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
+        <div class="acciones">
+            <a href="Favoritos.html">
+                <button class="boton-estilo">⭐ Favoritos</button>
+            </a>
+        </div>
+    </div>
+</header>
+<main class="contenedor-principal">
+    <section class="Mapa-CyL">
+        <h2>Mapa interactivo de Castilla y León</h2>
+        <div id="mapa-interactivo"></div>
+    </section>
+    <div class="informaion">
+        <h3>Información sobre los campings</h3>
+        <p>Cargando campings desde la API oficial...</p>
+    </div>
+</main>
+<footer class="pie-de-pagina">
+    <p>&copy; 2026 CampestresCyL. Todos los derechos reservados.</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="../../public/js/CampestresCyL.js"></script>
+</body>
+</html>
