@@ -1,0 +1,210 @@
+/* VARIABLES BÁSICAS */
+:root {
+    --azul-oscuro: #05070a;
+    --verde-principal: #4CAF50;
+    --verde-oscuro: #2e7d32;
+    --amarillo-fondo: #fffde7;
+    --blanco: #ffffff;
+}
+
+/* Estilos base del body */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--amarillo-fondo);
+    color: #333;
+}
+
+/* Contenedor principal del registro */
+.contenedor-registro {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--amarillo-fondo) 0%, #f0f8e8 100%);
+    padding: 20px;
+}
+
+/* Tarjeta del formulario de registro */
+.card-registro {
+    background: var(--blanco);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 15px 15px 0px var(--azul-oscuro);
+    border: 3px solid var(--azul-oscuro);
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Logo del registro */
+.logo-registro {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid var(--verde-principal);
+    margin: 0 auto 20px;
+    display: block;
+}
+
+/* Título principal */
+.card-registro h1 {
+    font-family: 'Chiller', cursive;
+    font-size: 2.5rem;
+    color: var(--verde-oscuro);
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Subtítulo */
+.card-registro p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 1rem;
+}
+
+/* Grupos de formulario */
+.form-grupo {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* Labels de los campos */
+.form-grupo label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--azul-oscuro);
+    font-weight: bold;
+}
+
+/* Inputs del formulario */
+.form-grupo input[type="text"],
+.form-grupo input[type="email"],
+.form-grupo input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--azul-oscuro);
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+/* Focus en los inputs */
+.form-grupo input:focus {
+    outline: none;
+    border-color: var(--verde-principal);
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+}
+
+/* Grupo de checkbox */
+.checkbox-grupo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+}
+
+.checkbox-grupo input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-grupo label {
+    margin: 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Botón de registro */
+.btn-registro {
+    width: 100%;
+    background-color: var(--verde-principal);
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border: 3px solid var(--azul-oscuro);
+    border-radius: 10px;
+    box-shadow: 6px 6px 0px var(--azul-oscuro);
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.btn-registro:hover {
+    background-color: var(--verde-oscuro);
+    transform: translate(2px, 2px);
+    box-shadow: 3px 3px 0px var(--azul-oscuro);
+}
+
+/* Enlaces adicionales */
+.enlaces-adicionales {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.enlaces-adicionales a {
+    color: var(--verde-principal);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.enlaces-adicionales a:hover {
+    color: var(--verde-oscuro);
+    text-decoration: underline;
+}
+
+/* Botón volver */
+.btn-volver {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background-color: var(--verde-principal);
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-volver:hover {
+    background-color: var(--verde-oscuro);
+}
+
+/* Mensajes de error y éxito */
+.mensaje-error {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #c62828;
+    display: none;
+}
+
+.mensaje-exito {
+    background-color: #e8f5e8;
+    color: #2e7d32;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border-left: 4px solid #2e7d32;
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .card-registro {
+        padding: 30px 20px;
+        margin: 10px;
+    }
+    
+    .card-registro h1 {
+        font-size: 2rem;
+    }
+}
