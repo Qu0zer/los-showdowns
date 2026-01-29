@@ -15,7 +15,7 @@
                 //Luego con la información de cada campamento solo extraemos los elementos que queremos guardar en nuestra base de datos
                 $dataCamping = [
                     'n_registro' => $data[$i]['n_registro'],
-                    'nombre_camping' => $data[$i]['nombre_camping'],
+                    'nombre_camping' => $data[$i]['nombre'],
                     'direccion' => $data[$i]['direccion'],
                     'provincia' => $data[$i]['provincia'],
                     'municipio' => $data[$i]['municipio'],

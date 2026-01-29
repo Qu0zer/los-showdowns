@@ -1,5 +1,6 @@
 <?php
     try{
+        require_once dirname(__DIR__) . '/vendor/autoload.php';
         header('Content-Type: application/json');
 
         function apiSummon($apiUrl){
@@ -51,6 +52,7 @@
             $api_method = $_SERVER['REQUEST_METHOD'];
             if($api_method === 'GET'){
                 var_dump($allData);
+                //$apiController->registrarCampings($pdo, $allData);
             }
         }
 

@@ -2,7 +2,9 @@
     "name": "jorge.torfer.1/los-showdowns",
     "autoload": {
         "psr-4": {
-            "JorgeTorfer1\\LosShowdowns\\": "src/"
+            "JorgeTorfer1\\LosShowdowns\\": "src/",
+            "Controllers\\": "src/Controllers/",
+            "Models\\": "src/Models/"
         }
     },
     "authors": [
