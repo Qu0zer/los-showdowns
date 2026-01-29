@@ -18,7 +18,7 @@ CREATE TABLE Usuarios (
 -- Tabla Campings
 -- ================================
 CREATE TABLE Campings (
-    n_registro INT(11) NOT NULL,
+    n_registro VARCHAR(255) NOT NULL,
     nombre_camping VARCHAR(50) NOT NULL,
     direccion VARCHAR(255) NOT NULL,
     provincia VARCHAR(50) NOT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE Campings (
 CREATE TABLE Favoritos (
     id INT(11) NOT NULL AUTO_INCREMENT,
     id_usuario INT(11) NOT NULL,
-    id_camping INT(11) NOT NULL,
+    id_camping VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (id_camping) REFERENCES Campings(n_registro) ON DELETE CASCADE

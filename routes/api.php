@@ -39,7 +39,7 @@
             $provincias = ['León', 'Salamanca', 'Burgos', 'Ávila', 'Soria', 'Segovia', 'Palencia','Valladolid','Zamora'];
             $allData = [];
             foreach ($provincias as $provincia){
-                $apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?where=provincia%20%3D%20%27' . urldecode($provincia) . '%27&limit=20&refine=establecimiento%3A%22Campings%22';
+                $apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?where=provincia%20%3D%20%27' . urldecode($provincia) . '%27&limit=100&refine=establecimiento%3A%22Campings%22';
                 $data = apiSummon($apiUrl);
                 if(isset($data['results'])){
                     $allData = array_merge($allData, $data['results']);
@@ -51,8 +51,8 @@
             $apiController = new \Controllers\ApiController();
             $api_method = $_SERVER['REQUEST_METHOD'];
             if($api_method === 'GET'){
-                var_dump($allData);
-                //$apiController->registrarCampings($pdo, $allData);
+                //var_dump($allData);
+                $apiController->registrarCampings($pdo, $allData);
             }
         }
 

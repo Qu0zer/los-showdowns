@@ -7,7 +7,6 @@
                 $dbname = 'campestrecyl_campings';
                 $user = 'root';
                 $pass = '';
-                $port = 80;
                 try{
                     // Creo una nueva instancia de PDO
                     self::$pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8;", $user, $pass);

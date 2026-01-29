@@ -84,11 +84,9 @@ class Campings{
     public function saveCampings($pdo){
         try{
             // En caso de que sea la primera vez que guardamos un camping
-            if(!isset($this->n_registro)){
-                $sql = "
-                INSERT INTO campings (n_registro, nombre_camping, direccion, provincia, municipio, localidad, telefono, email, web, plazas, latitud, longitud) 
-                VALUES (:n_registro, :nombre_camping, :direccion, :provincia, :municipio, :localidad, :telefono, :email, :web, :plazas, :latitud, :longitud)
-                ";
+            if(isset($this->n_registro)){
+                $sql = 'INSERT INTO campings (n_registro, nombre_camping, direccion, provincia, municipio, localidad, telefono, email, web, plazas, latitud, longitud) 
+                VALUES (:n_registro, :nombre_camping, :direccion, :provincia, :municipio, :localidad, :telefono, :email, :web, :plazas, :latitud, :longitud)';
                 $sentence = $pdo->prepare($sql);
                 $sentence->execute([
                     ':n_registro' => $this->n_registro,
@@ -104,10 +102,17 @@ class Campings{
                     ':latitud' => $this->latitud,
                     ':longitud' => $this->longitud
                 ]);
-                return true;
+                // return true
+                return [
+                    'success' => true,
+                    'action' => 'insert',
+                    'n_registro' => $this->n_registro,
+                    'nombre' => $this->nombre_camping
+                ];
             // En caso de que ya exista ese camping sobreescribimos la información actualizada
-            } else if(isset($this->n_registro)){
-                $sql = 'UPDATE campings SET nombre_camping = :nombre_camping, direccion = :direccion, provincia = :provincia, municipio = :municipio, localidad = :localidad, telefono = :telefono, email = :email, web = :web, plazas = :plazas, latitud = :latitud, longitud = :longitud';
+            } else if(!isset($this->n_registro)){
+                $sql = 'UPDATE campings SET nombre_camping = :nombre_camping, direccion = :direccion, provincia = :provincia, municipio = :municipio, localidad = :localidad, telefono = :telefono, email = :email, web = :web, plazas = :plazas, latitud = :latitud, longitud = :longitud
+                WHERE n_registro = :n_registro';
                 $sentence = $pdo ->prepare($sql);
                 $sentence->execute([
                     ':n_registro' => $this->n_registro,
@@ -123,12 +128,29 @@ class Campings{
                     ':latitud' => $this->latitud,
                     ':longitud' => $this->longitud
                 ]);
-                return true;
+                // return true
+                return [
+                    'success' => true,
+                    'action' => 'update',
+                    'n_registro' => $this->n_registro,
+                    'nombre' => $this->nombre_camping
+                ];
             } else {
-                return false;
+                return [
+                    'success' => false,
+                    'error' => 'El campo n_registro es obligatorio',
+                    'n_registro' => null,
+                    'nombre' => $this->nombre_camping
+                ];
             }
         } catch(PDOException $e){
-            return false;
+            return [
+                    'success' => false,
+                    'error' => 'Error de la base de datos: ' . $e->getMessage(),
+                    'error_code' => $e->getCode(),
+                    'n_registro' => $this->n_registro,
+                    'nombre' => $this->nombre_camping
+                ];
         }
         
 
