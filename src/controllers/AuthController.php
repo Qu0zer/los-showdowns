@@ -12,10 +12,10 @@
                 $usuario = Usuario::login($pdo, $email, $password);
                 if($usuario){
                     $_SESSION['usuario'] = $usuario;
-                    header('Location: index.php?action=mostrarMenu');
+                    header('Location: index.php?action=inicio');
                     exit();
                 } else {
-                    header('Location: index.php?action=mostrarLogin');
+                    header('Location: index.php?action=login');
                     exit();
                 }
             }
@@ -23,9 +23,9 @@
 
         // Función para procesar el registro
         public function procesarRegistro($pdo) {
-            $username = htmlspecialchars(trim($_POST['nombre'] ?? ''));
+            $username = trim($_POST['nombre'] ?? '');
             $email = filter_var($_POST['email'] ?? '', FILTER_VALIDATE_EMAIL);
-            $password = htmlspecialchars($_POST['password'] ?? '');
+            $password = $_POST['password'] ?? '';
             if(!empty($username) && !empty($password) && !empty($email)){
                 // Llamamos a registro para que se aplique
                 if(Usuario::register($pdo, $username, $email, $password)){

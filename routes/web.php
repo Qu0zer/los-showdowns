@@ -12,8 +12,7 @@
         ];
         $allowedViewsAuth = [
             'procesarLogin' => 'procesarLogin',
-            'procesarRegistro' => 'procesarRegistro',
-            
+            'procesarRegistro' => 'procesarRegistro'
         ];
         $action = $_GET['action'] ?? 'inicio';
         // Enrutamientos para mostrar las principales vistas
