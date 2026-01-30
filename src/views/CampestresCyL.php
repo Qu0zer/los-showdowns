@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body> 
+
 <header class="cabecera">
     <div class="contenido-cabecera">
         <h1>CampestresCyL</h1>
@@ -25,7 +26,13 @@
 </header>
 <main class="contenedor-principal">
     <section class="Mapa-CyL">
-        <h2>Mapa interactivo de Castilla y León</h2>
+        <div class="mapa">
+            <h2>Mapa interactivo de Castilla y León</h2>
+            <div class="buscador-mapa">
+                <input type="text" id="buscador-campings" placeholder="🔍 Buscar campings..." class="input-buscador-mapa">
+                <button id="btn-limpiar-mapa" class="btn-limpiar-mapa">✕</button>
+            </div>
+        </div>
         <div id="mapa-interactivo"></div>
     </section>
     <div class="informaion">

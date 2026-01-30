@@ -62,8 +62,21 @@ async function cargarCampings() {
                         if (lat >= 40.0 && lat <= 43.5 && lon >= -7.5 && lon <= -1.5) {
                             campingsConCoordenadas++;
                             
+                            // Almacenar datos del camping para el buscador
+                            const datoCamping = {
+                                nombre: fields.nombre || 'Camping',
+                                provincia: fields.provincia || 'No especificado',
+                                municipio: fields.municipio || 'No especificado',
+                                localidad: fields.localidad || 'No especificado',
+                                lat: lat,
+                                lon: lon
+                            };
+                            todosLosCampings.push(datoCamping);
+                            
                             // Crear marcador en el mapa
                             const marker = L.marker([lat, lon]).addTo(map);
+                            marcadoresEnMapa.push(marker); // Guardar referencia del marcador
+                            
                             marker.bindPopup(`
                                 <div style="text-align: center;">
                                     <h3 style="color: #2e7d32; margin: 5px 0;">🏕️ ${fields.nombre || 'Camping'}</h3>
@@ -97,18 +110,27 @@ async function cargarCampings() {
 }
 
 // 5. FUNCIÓN PARA ACTUALIZAR EL PANEL DE INFORMACIÓN
-function actualizarInfoPanel(numCampings, mensajeError = null) {
+function actualizarInfoPanel(numCampings, mensajeError = null, mensajeBusqueda = null) {
     const infoPanel = document.querySelector('.informaion p');
     if (infoPanel) {
         if (mensajeError) {
             infoPanel.innerHTML = `<strong style="color: #d32f2f;">❌ ${mensajeError}</strong>`;
         } else if (numCampings === 0) {
-            infoPanel.innerHTML = '<strong style="color: #ff9800;">ℹ️ No se encontraron campings con coordenadas válidas.</strong>';
+            if (mensajeBusqueda) {
+                infoPanel.innerHTML = '<strong style="color: #ff9800;">🔍 No se encontraron campings que coincidan con la búsqueda.</strong>';
+            } else {
+                infoPanel.innerHTML = '<strong style="color: #ff9800;">ℹ️ No se encontraron campings con coordenadas válidas.</strong>';
+            }
         } else {
-            infoPanel.innerHTML = `
-                <strong style="color: #2e7d32;">🏕️ ${numCampings} camping${numCampings !== 1 ? 's' : ''} encontrado${numCampings !== 1 ? 's' : ''}</strong><br>
-                <span style="color: #666;">Haz clic en los marcadores del mapa para ver más información.</span>
-            `;
+            let mensaje = `<strong style="color: #2e7d32;">🏕️ ${numCampings} camping${numCampings !== 1 ? 's' : ''} encontrado${numCampings !== 1 ? 's' : ''}</strong>`;
+            
+            if (mensajeBusqueda) {
+                mensaje += `<br><span style="color: #666; font-size: 0.9em;">${mensajeBusqueda}</span>`;
+            }
+            
+            mensaje += '<br><span style="color: #666;">Haz clic en los marcadores del mapa para ver más información.</span>';
+            
+            infoPanel.innerHTML = mensaje;
         }
     }
 }
@@ -121,3 +143,87 @@ setTimeout(function() {
     // Cargar los campings reales desde la API
     cargarCampings();
 }, 100);
+
+// 7. FUNCIONALIDAD DEL BUSCADOR DEL MAPA
+let todosLosCampings = []; // Array para almacenar todos los campings cargados
+let marcadoresEnMapa = []; // Array para controlar los marcadores
+
+// Función para inicializar el buscador del mapa
+function inicializarBuscadorMapa() {
+    const inputBuscador = document.getElementById('buscador-campings');
+    const btnLimpiar = document.getElementById('btn-limpiar-mapa');
+
+    if (!inputBuscador || !btnLimpiar) return;
+
+    // Evento de búsqueda en tiempo real
+    inputBuscador.addEventListener('input', function() {
+        const termino = this.value.trim();
+        
+        if (termino.length > 0) {
+            btnLimpiar.classList.add('visible');
+            buscarYFiltrarCampings(termino);
+        } else {
+            btnLimpiar.classList.remove('visible');
+            mostrarTodosLosMarcadores();
+            actualizarInfoPanel(marcadoresEnMapa.length);
+        }
+    });
+
+    // Botón limpiar
+    btnLimpiar.addEventListener('click', function() {
+        inputBuscador.value = '';
+        this.classList.remove('visible');
+        mostrarTodosLosMarcadores();
+        actualizarInfoPanel(marcadoresEnMapa.length);
+        inputBuscador.focus();
+    });
+}
+
+// Función para buscar y filtrar campings en el mapa
+function buscarYFiltrarCampings(termino) {
+    const terminoLower = termino.toLowerCase();
+    const campingsFiltrados = todosLosCampings.filter(camping => {
+        return camping.nombre.toLowerCase().includes(terminoLower) ||
+               camping.provincia.toLowerCase().includes(terminoLower) ||
+               camping.municipio.toLowerCase().includes(terminoLower) ||
+               camping.localidad.toLowerCase().includes(terminoLower);
+    });
+
+    filtrarMarcadoresEnMapa(campingsFiltrados);
+    actualizarInfoPanel(campingsFiltrados.length, `Resultados para "${termino}"`);
+}
+
+// Función para filtrar marcadores en el mapa
+function filtrarMarcadoresEnMapa(campingsFiltrados) {
+    marcadoresEnMapa.forEach(marcador => {
+        const latMarcador = marcador.getLatLng().lat;
+        const lonMarcador = marcador.getLatLng().lng;
+        
+        const estaEnFiltro = campingsFiltrados.some(camping => 
+            Math.abs(camping.lat - latMarcador) < 0.0001 && 
+            Math.abs(camping.lon - lonMarcador) < 0.0001
+        );
+        
+        if (estaEnFiltro) {
+            if (!map.hasLayer(marcador)) {
+                marcador.addTo(map);
+            }
+        } else {
+            if (map.hasLayer(marcador)) {
+                map.removeLayer(marcador);
+            }
+        }
+    });
+}
+
+// Función para mostrar todos los marcadores
+function mostrarTodosLosMarcadores() {
+    marcadoresEnMapa.forEach(marcador => {
+        if (!map.hasLayer(marcador)) {
+            marcador.addTo(map);
+        }
+    });
+}
+
+// Inicializar el buscador cuando se carga la página
+document.addEventListener('DOMContentLoaded', inicializarBuscadorMapa);

@@ -129,6 +129,100 @@ body {
     margin-bottom: 20px;
 }
 
+/* --- CONTENEDOR DEL TÍTULO Y BUSCADOR --- */
+.mapa {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.mapa h2 {
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    flex: 1;
+    min-width: 300px;
+}
+
+/* --- BUSCADOR DEL MAPA CON ESTILO DE BOTONES --- */
+.buscador-mapa {
+    display: flex;
+    align-items: center;
+    background-color: var(--blanco);
+    border: 3px solid var(--azul-oscuro);
+    border-radius: 10px;
+    box-shadow: 6px 6px 0px var(--azul-oscuro);
+    overflow: hidden;
+    transition: all 0.2s ease;
+    min-width: 280px;
+}
+
+.buscador-mapa:focus-within {
+    transform: translate(2px, 2px);
+    box-shadow: 3px 3px 0px var(--azul-oscuro);
+}
+
+.input-buscador-mapa {
+    flex: 1;
+    padding: 15px 20px;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+}
+
+.input-buscador-mapa::placeholder {
+    color: #666;
+    font-style: italic;
+    font-weight: normal;
+}
+
+.btn-limpiar-mapa {
+    background-color: var(--verde-principal);
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: none;
+    min-width: 50px;
+}
+
+.btn-limpiar-mapa:hover {
+    background-color: var(--verde-oscuro);
+}
+
+.btn-limpiar-mapa.visible {
+    display: block;
+}
+
+/* Responsive para el contenedor título-buscador */
+@media (max-width: 768px) {
+    .mapa {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .mapa h2 {
+        text-align: center;
+        min-width: auto;
+        margin-bottom: 15px;
+    }
+    
+    .buscador-mapa {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
 #mapa-interactivo {
     height: 600px;
     width: 100%;

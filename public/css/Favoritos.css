@@ -1,148 +1,109 @@
-/* =========================================
-   VARIABLES Y CONFIGURACIÓN BASE
-   ========================================= */
+/* VARIABLES BÁSICAS */
 :root {
-    --oscuro: #0f172a;
-    --verde-principal: #2d5a27;
-    --verde-brillante: #4caf50;
-    --verde-neon: #82f53c;
-    --crema: #f5f5f5;
+    --azul-oscuro: #05070a;
+    --verde-principal: #4CAF50;
+    --verde-oscuro: #2e7d32;
+    --amarillo-fondo: #fffde7;
     --blanco: #ffffff;
 }
 
 body {
     margin: 0;
-    padding: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--crema);
-    color: var(--oscuro);
+    font-family: Arial, sans-serif;
+    background-color: var(--amarillo-fondo);
+    color: #333;
 }
 
-/* =========================================
-   HEADER (LOGO DEBAJO DEL TEXTO)
-   ========================================= */
+/* HEADER */
 .header-favoritos {
-    background-color: var(--oscuro);
-    padding: 40px 20px 80px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--crema);
-    border-bottom: 4px solid var(--verde-neon); 
-    position: relative;
-}
-
-.logo-container {
-    display: flex;
-    flex-direction: column; /* Apila elementos verticalmente */
-    align-items: center;    /* Centra el texto y el logo */
-    gap: 20px;              /* Espacio entre el texto y el logo */
+    background-color: var(--azul-oscuro);
+    padding: 40px 20px;
+    text-align: center;
+    color: white;
+    border-bottom: 5px solid var(--verde-oscuro);
 }
 
 .header-favoritos h1 {
     font-family: 'Chiller', cursive;
-    font-size: 5.5rem;
-    margin: 0;
-    color: #ffffff;
-    text-shadow: 
-        0 0 10px var(--verde-neon),
-        0 0 20px rgba(130, 245, 60, 0.4);
-    order: 1; /* Asegura que el texto vaya primero */
+    font-size: 4rem;
+    margin: 20px 0;
+    text-shadow: 2px 2px 10px var(--verde-principal);
 }
 
-/* Logo Circular debajo del texto */
 .mini-logo {
-    order: 2; /* Asegura que el logo vaya segundo */
-    height: 110px;
-    width: 110px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 3px solid var(--verde-neon);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 20px var(--verde-neon);
-    background: transparent;
-    object-fit: contain;
-    padding: 10px;
-    transition: transform 0.3s ease;
+    border: 3px solid var(--verde-principal);
+    margin: 20px auto;
+    display: block;
 }
 
-.mini-logo:hover {
-    transform: scale(1.1);
-}
-
-/* Botón Volver */
 .btn-volver {
     position: absolute;
-    bottom: 20px;
-    left: 40px;
-    color: var(--verde-neon);
+    top: 20px;
+    left: 20px;
+    color: var(--verde-principal);
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.1rem;
+    padding: 10px 20px;
+    background: rgba(76, 175, 80, 0.1);
+    border-radius: 5px;
 }
 
-/* =========================================
-   CONTENIDO DE FAVORITOS (GRID)
-   ========================================= */
+/* CONTENIDO FAVORITOS */
 .contenedor-favoritos {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 30px;
-    padding: 60px 40px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 40px 20px;
     max-width: 1200px;
     margin: 0 auto;
-    min-height: 400px;
 }
 
-/* Mensaje cuando no hay favoritos */
 .mensaje-vacio {
     grid-column: 1 / -1;
     text-align: center;
-    padding: 60px 20px;
+    padding: 40px;
     background: var(--blanco);
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    border: 3px solid var(--azul-oscuro);
+    box-shadow: 10px 10px 0px var(--azul-oscuro);
 }
 
 .mensaje-vacio h2 {
-    color: var(--verde-principal);
+    color: var(--verde-oscuro);
     font-size: 2rem;
-    margin-bottom: 20px;
-}
-
-.mensaje-vacio p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 30px;
-    line-height: 1.6;
+    margin-bottom: 15px;
 }
 
 .btn-explorar {
-    display: inline-block;
     background: var(--verde-principal);
     color: white;
     text-decoration: none;
     padding: 15px 30px;
     border-radius: 8px;
     font-weight: bold;
-    transition: background-color 0.3s ease;
+    display: inline-block;
+    margin-top: 20px;
 }
 
 .btn-explorar:hover {
-    background: var(--verde-brillante);
+    background: var(--verde-oscuro);
 }
 
+/* TARJETAS DE CAMPING */
 .card-camping {
     background: var(--blanco);
-    border-radius: 8px;
+    border-radius: 10px;
+    border: 3px solid var(--azul-oscuro);
+    box-shadow: 10px 10px 0px var(--azul-oscuro);
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
 }
 
 .card-imagen {
+    height: 180px;
     position: relative;
-    height: 200px;
 }
 
 .card-imagen img {
@@ -153,13 +114,13 @@ body {
 
 .provincia-tag {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
     background: var(--verde-principal);
     color: white;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px;
 }
 
 .card-info {
@@ -168,42 +129,50 @@ body {
 
 .card-info h3 {
     margin: 0 0 10px 0;
-    color: var(--verde-principal);
-    font-size: 1.3rem;
+    color: var(--verde-oscuro);
+    font-size: 1.2rem;
 }
 
 .card-botones {
     display: flex;
     gap: 10px;
+    margin-top: 15px;
+}
+
+.btn-detalles, .btn-eliminar {
+    padding: 10px;
+    border-radius: 5px;
+    flex: 1;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
 }
 
 .btn-detalles {
     background: var(--verde-principal);
     color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    flex: 1;
-    cursor: pointer;
+}
+
+.btn-detalles:hover {
+    background: var(--verde-oscuro);
 }
 
 .btn-eliminar {
     background: white;
     color: #e74c3c;
-    border: 1px solid #e74c3c;
-    padding: 10px;
-    border-radius: 4px;
-    flex: 1;
-    cursor: pointer;
+    border: 2px solid #e74c3c;
 }
 
-/* =========================================
-   PIE DE PÁGINA
-   ========================================= */
-.pie-de-pagina {
-    background-color: #252850;
+.btn-eliminar:hover {
+    background: #e74c3c;
     color: white;
-    padding: 60px 40px;
-    text-align: left;
-    margin-top: 80px;
+}
+
+/* PIE DE PÁGINA */
+.pie-de-pagina {
+    background-color: var(--azul-oscuro);
+    color: white;
+    padding: 40px;
+    text-align: center;
+    margin-top: 40px;
 }
