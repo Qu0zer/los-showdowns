@@ -1,67 +1,61 @@
 <?php
     try{
         header('Content-Type: application/json');
-
-        function apiSummon($apiUrl){
-
-            $ch = curl_init($apiUrl);
-            // Tiene que llamar a la url q hemos construido previamente
-            curl_setopt($ch, CURLOPT_URL, $apiUrl); 
-            // Le decimos que nos devuelva la respuesta, no imprimir 
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // Le enviamos las cabeceras
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Accept: application/json'
-            ]);
-            
-            $response = curl_exec($ch);
-
-            if(curl_errno($ch)){
-                // Devolver error en json
-                echo json_encode(['error' => curl_error($ch)]);
-                curl_close($ch);
-                exit;
-            }
-
-            $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-            if($statusCode == 200){
-                $data = json_decode($response, true);
-                return $data;
-            } else {
-                echo json_encode(['error' => 'Error en API externa', 'status' => $statusCode]);
-            }
-
-        }
+        
         if(isset($_SERVER['REQUEST_METHOD'])){
-            // Lista de provincias
-            $provincias = ['León', 'Salamanca', 'Burgos', 'Ávila', 'Soria', 'Segovia', 'Palencia','Valladolid','Zamora'];
-            $allData = [];
-            foreach ($provincias as $provincia){
-                $apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?where=provincia%20%3D%20%27' . urldecode($provincia) . '%27&limit=100&refine=establecimiento%3A%22Campings%22';
-                $data = apiSummon($apiUrl);
-                if(isset($data['results'])){
-                    $allData = array_merge($allData, $data['results']);
-                }
-            }
-            //$apiUrlTesting = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?select=*&where=provincia%20%3D%20%27Salamanca%27&limit=100&refine=establecimiento%3A%22Campings%22';
-            //var_dump(apiSummon($apiUrlTesting));
-            json_encode($allData);
             $apiController = new \Controllers\ApiController();
             $api_method = $_SERVER['REQUEST_METHOD'];
-            if($api_method === 'GET'){
-                //var_dump($allData);
-                $apiController->registrarCampings($pdo, $allData);
+            $action = $_GET['action'] ?? '';
+            
+            $allowedApiActions = [
+                'guardarCampings' => 'guardarCampings',
+                'mostrarFavoritos' => 'mostrarFavoritos',
+                'addFavoritos' => 'addFavoritos',
+                'deleteFavoritos' => 'deleteFavoritos'
+            ];
+            
+            if(isset($allowedApiActions[$action])){
+                
+                switch($allowedApiActions[$action]){
+                    case 'guardarCampings':
+                        if($api_method === 'POST'){
+                            $resultado = $apiController->guardarCampings($pdo);
+                            echo json_encode($resultado);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Método POST requerido']);
+                        }
+                        break;
+                    case 'mostrarFavoritos':
+                        $favoritos = $apiController->mostrarFavoritos($pdo);
+                        echo json_encode($favoritos);
+                        break;
+                    case 'addFavoritos':
+                        if($api_method === 'POST'){
+                            $resultado = $apiController->addFavoritos($pdo);
+                            echo json_encode($resultado);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+                        }
+                        break;
+                    case 'deleteFavoritos':
+                        if($api_method === 'POST'){
+                            $resultado = $apiController->deleteFavoritos($pdo);
+                            echo json_encode($resultado);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+                        }
+                        break;
+                    default:
+                        echo json_encode(['success' => false, 'message' => 'Acción no válida']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Acción no permitida']);
             }
         }
 
-    }catch(Exception $e){
+    } catch(Exception $e){
         http_response_code(500);
         header('HTTP/1.1 500 Internal Server Error');
-        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Error interno del servidor', 'message' => $e->getMessage()]);
     }
-
-    
-
-
 ?>

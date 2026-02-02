@@ -1,229 +1,322 @@
-// 1. INICIALIZACIÓN DEL MAPA:
-// Centrado específicamente en Castilla y León con límites más precisos
-var map = L.map('mapa-interactivo').setView([41.8, -4.5], 8);
+// ============================================
+// VARIABLES GLOBALES
+// ============================================
+let map;
+let marcadores = [];
+let campingsGlobal = []; // Array global con todos los campings
 
-// 2. CAPA DE DISEÑO (Tiles):
-// Usamos OpenStreetMap, que es gratuito y de código abierto.
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-
-// 3. ESTABLECER LÍMITES DEL MAPA PARA CASTILLA Y LEÓN
-// Coordenadas aproximadas de los límites de Castilla y León
-var bounds = L.latLngBounds(
-    [40.0, -7.5], // Esquina suroeste
-    [43.5, -1.5]  // Esquina noreste
-);
-map.setMaxBounds(bounds);
-map.setMinZoom(7);
-map.setMaxZoom(15);
-
-// 4. FUNCIÓN PARA CARGAR CAMPINGS ESPECÍFICAMENTE
-async function cargarCampings() {
-    console.log('🏕️ Cargando campings desde la API...');
+// ============================================
+// 1. INICIALIZAR MAPA
+// ============================================
+function inicializarMapa() {
+    console.log('🗺️ Inicializando mapa...');
     
-    try {
-        // Usar el filtro específico para campings
-        const apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records';
-        const response = await fetch(apiUrl + '?limit=100&refine=establecimiento%3A%22Campings%22');
-        
-        if (response.ok) {
+    map = L.map('mapa-interactivo').setView([41.8, -4.5], 8);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Establecer límites
+    const bounds = L.latLngBounds(
+        [40.0, -7.5],
+        [43.5, -1.5]
+    );
+    map.setMaxBounds(bounds);
+    map.setMinZoom(7);
+    map.setMaxZoom(15);
+    
+    console.log('✅ Mapa inicializado');
+}
+
+// ============================================
+// 2. EXTRAER DATOS DE API PÚBLICA
+// ============================================
+async function extraerCampingsDesdeAPI() {
+    console.log('🔄 Extrayendo campings desde API pública...');
+    
+    const provincias = ['León', 'Salamanca', 'Burgos', 'Ávila', 'Soria', 'Segovia', 'Palencia', 'Valladolid', 'Zamora'];
+    let totalCampings = 0;
+    
+    for (const provincia of provincias) {
+        try {
+            const apiUrl = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?where=provincia%20%3D%20%27${encodeURIComponent(provincia)}%27&limit=100&refine=establecimiento%3A%22Campings%22`;
+            
+            console.log(`📍 Cargando campings de ${provincia}...`);
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                console.error(`❌ Error en ${provincia}: HTTP ${response.status}`);
+                continue;
+            }
+            
             const data = await response.json();
-            console.log(`📊 Total de campings encontrados: ${data.results.length}`);
             
-            let campingsConCoordenadas = 0;
-            
-            data.results.forEach((record, index) => {
-                let fields = null;
+            if (data.results && Array.isArray(data.results)) {
+                console.log(`   ✅ ${data.results.length} campings encontrados en ${provincia}`);
                 
-                // Obtener los campos del registro
-                if (record.record && record.record.fields) {
-                    fields = record.record.fields;
-                } else if (record.fields) {
-                    fields = record.fields;
+                // DEBUG: Mostrar estructura del primer camping
+                if (data.results.length > 0) {
+                    console.log('🔍 ESTRUCTURA DEL PRIMER CAMPING:', data.results[0]);
                 }
                 
-                if (fields) {
-                    console.log(`🏕️ Camping ${index + 1}:`, {
-                        nombre: fields.nombre || 'Sin nombre',
-                        establecimiento: fields.establecimiento,
-                        coordenadas: fields.coordenadas_geograficas
-                    });
-                    
-                    // Verificar si tiene coordenadas válidas
-                    if (fields.coordenadas_geograficas && 
-                        fields.coordenadas_geograficas.lat && 
-                        fields.coordenadas_geograficas.lon) {
-                        
-                        const lat = parseFloat(fields.coordenadas_geograficas.lat);
-                        const lon = parseFloat(fields.coordenadas_geograficas.lon);
-                        
-                        // Verificar que las coordenadas están dentro de Castilla y León
-                        if (lat >= 40.0 && lat <= 43.5 && lon >= -7.5 && lon <= -1.5) {
-                            campingsConCoordenadas++;
-                            
-                            // Almacenar datos del camping para el buscador
-                            const datoCamping = {
-                                nombre: fields.nombre || 'Camping',
-                                provincia: fields.provincia || 'No especificado',
-                                municipio: fields.municipio || 'No especificado',
-                                localidad: fields.localidad || 'No especificado',
-                                lat: lat,
-                                lon: lon
-                            };
-                            todosLosCampings.push(datoCamping);
-                            
-                            // Crear marcador en el mapa
-                            const marker = L.marker([lat, lon]).addTo(map);
-                            marcadoresEnMapa.push(marker); // Guardar referencia del marcador
-                            
-                            marker.bindPopup(`
-                                <div style="text-align: center;">
-                                    <h3 style="color: #2e7d32; margin: 5px 0;">🏕️ ${fields.nombre || 'Camping'}</h3>
-                                    <p style="margin: 3px 0;"><strong>Ubicación:</strong> ${fields.municipio || 'No especificado'}</p>
-                                    <p style="margin: 3px 0;"><strong>Provincia:</strong> ${fields.provincia || 'No especificado'}</p>
-                                    <p style="margin: 3px 0; font-size: 0.9em; color: #666;">📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}</p>
-                                </div>
-                            `);
-                            
-                            console.log(`✅ Marcador creado para: ${fields.nombre} en [${lat}, ${lon}]`);
-                        } else {
-                            console.log(`⚠️ Coordenadas fuera de Castilla y León: [${lat}, ${lon}]`);
-                        }
-                    } else {
-                        console.log(`❌ Sin coordenadas válidas para: ${fields.nombre || 'Sin nombre'}`);
-                    }
-                }
+                campingsGlobal = campingsGlobal.concat(data.results);
+                totalCampings += data.results.length;
+            }
+        } catch (error) {
+            console.error(`❌ Error al cargar ${provincia}:`, error);
+        }
+    }
+    
+    console.log(`🏕️ Total de campings extraídos: ${totalCampings}`);
+    return campingsGlobal;
+}
+
+// ============================================
+// 3. REFACTORIZAR DATOS (Extraer solo lo que necesitamos)
+// ============================================
+function refactorizarCampings(campingsRaw) {
+    console.log('🔧 Refactorizando datos...');
+    
+    const campingsRefactorizados = [];
+    let sinCoordenadas = 0;
+    
+    campingsRaw.forEach((camping, index) => {
+        try {
+            // Los datos vienen directamente en el objeto camping, no en camping.fields
+            const data = camping;
+            
+            // Obtener coordenadas de posicion (que es un objeto con lat y lon)
+            let lat, lon;
+            
+            if (data.posicion && typeof data.posicion === 'object') {
+                lat = parseFloat(data.posicion.lat);
+                lon = parseFloat(data.posicion.lon);
+            } else if (data.gps_latitud && data.gps_longitud) {
+                lat = parseFloat(data.gps_latitud);
+                lon = parseFloat(data.gps_longitud);
+            } else if (data.latitud && data.longitud) {
+                lat = parseFloat(data.latitud);
+                lon = parseFloat(data.longitud);
+            } else {
+                sinCoordenadas++;
+                return;
+            }
+            
+            // Validar que las coordenadas sean números válidos
+            if (isNaN(lat) || isNaN(lon)) {
+                sinCoordenadas++;
+                return;
+            }
+            
+            // Validar que esté en Castilla y León
+            if (lat < 40.0 || lat > 43.5 || lon < -7.5 || lon > -1.5) {
+                console.warn(`⚠️ Fuera de límites: ${data.nombre} [${lat}, ${lon}]`);
+                return;
+            }
+            
+            // Extraer solo los datos que necesitamos
+            const campingRefactorizado = {
+                n_registro: data.n_registro || null,
+                nombre: data.nombre || 'Sin nombre',
+                provincia: data.provincia || 'No especificado',
+                municipio: data.municipio || 'No especificado',
+                localidad: data.localidad || 'No especificado',
+                direccion: data.direccion || 'No especificado',
+                telefono: data.telefono_1 || 'No disponible',
+                email: data.email || 'No disponible',
+                web: data.web || 'No disponible',
+                plazas: data.plazas || 'No especificado',
+                latitud: lat,
+                longitud: lon
+            };
+            
+            campingsRefactorizados.push(campingRefactorizado);
+        } catch (error) {
+            console.error(`❌ Error refactorizando camping ${index}:`, error);
+        }
+    });
+    
+    console.log(`✅ ${campingsRefactorizados.length} campings refactorizados correctamente`);
+    console.log(`⚠️ ${sinCoordenadas} campings sin coordenadas válidas`);
+    return campingsRefactorizados;
+}
+
+// ============================================
+// 4. VISUALIZAR CAMPINGS EN EL MAPA
+// ============================================
+function visualizarCampingsEnMapa(campings) {
+    console.log('📍 Visualizando campings en el mapa...');
+    
+    campings.forEach((camping) => {
+        try {
+            const marker = L.marker([camping.latitud, camping.longitud]).addTo(map);
+            
+            // Al hacer click en el marcador, mostrar información en el contenedor
+            marker.on('click', function() {
+                mostrarInformacionEnContenedor(camping);
             });
             
-            actualizarInfoPanel(campingsConCoordenadas);
-            
-        } else {
-            console.log('❌ Error HTTP:', response.status);
-            actualizarInfoPanel(0, `Error HTTP: ${response.status}`);
+            // Guardar referencia del marcador
+            marcadores.push({
+                marker: marker,
+                camping: camping
+            });
+        } catch (error) {
+            console.error(`❌ Error creando marcador para ${camping.nombre}:`, error);
         }
-        
-    } catch (error) {
-        console.log('❌ Error de conexión:', error.message);
-        actualizarInfoPanel(0, `Error de conexión: ${error.message}`);
-    }
-}
-
-// 5. FUNCIÓN PARA ACTUALIZAR EL PANEL DE INFORMACIÓN
-function actualizarInfoPanel(numCampings, mensajeError = null, mensajeBusqueda = null) {
-    const infoPanel = document.querySelector('.informaion p');
-    if (infoPanel) {
-        if (mensajeError) {
-            infoPanel.innerHTML = `<strong style="color: #d32f2f;">❌ ${mensajeError}</strong>`;
-        } else if (numCampings === 0) {
-            if (mensajeBusqueda) {
-                infoPanel.innerHTML = '<strong style="color: #ff9800;">🔍 No se encontraron campings que coincidan con la búsqueda.</strong>';
-            } else {
-                infoPanel.innerHTML = '<strong style="color: #ff9800;">ℹ️ No se encontraron campings con coordenadas válidas.</strong>';
-            }
-        } else {
-            let mensaje = `<strong style="color: #2e7d32;">🏕️ ${numCampings} camping${numCampings !== 1 ? 's' : ''} encontrado${numCampings !== 1 ? 's' : ''}</strong>`;
-            
-            if (mensajeBusqueda) {
-                mensaje += `<br><span style="color: #666; font-size: 0.9em;">${mensajeBusqueda}</span>`;
-            }
-            
-            mensaje += '<br><span style="color: #666;">Haz clic en los marcadores del mapa para ver más información.</span>';
-            
-            infoPanel.innerHTML = mensaje;
-        }
-    }
-}
-
-// 6. INICIALIZACIÓN
-setTimeout(function() {
-    // Forzar redimensionamiento del mapa
-    map.invalidateSize();
+    });
     
-    // Cargar los campings reales desde la API
-    cargarCampings();
-}, 100);
+    console.log(`✅ ${marcadores.length} marcadores creados en el mapa`);
+    actualizarPanelInfo(campings.length);
+}
 
-// 7. FUNCIONALIDAD DEL BUSCADOR DEL MAPA
-let todosLosCampings = []; // Array para almacenar todos los campings cargados
-let marcadoresEnMapa = []; // Array para controlar los marcadores
+// ============================================
+// 4.5 MOSTRAR INFORMACIÓN EN CONTENEDOR
+// ============================================
+function mostrarInformacionEnContenedor(camping) {
+    console.log('📋 Mostrando información de:', camping.nombre);
+    
+    const contenedor = document.querySelector('.informaion');
+    
+    if (!contenedor) {
+        console.error('❌ No se encontró el contenedor .informaion');
+        return;
+    }
+    
+    // Crear HTML con la información del camping
+    const html = `
+        <div style="padding: 15px; background-color: #f5f5f5; border-radius: 8px;">
+            <h3 style="color: #2e7d32; margin: 0 0 15px 0; font-size: 20px;">🏕️ ${camping.nombre}</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <p style="margin: 8px 0;"><strong>Provincia:</strong> ${camping.provincia}</p>
+                    <p style="margin: 8px 0;"><strong>Municipio:</strong> ${camping.municipio}</p>
+                    <p style="margin: 8px 0;"><strong>Localidad:</strong> ${camping.localidad}</p>
+                </div>
+                <div>
+                    <p style="margin: 8px 0;"><strong>Plazas:</strong> ${camping.plazas}</p>
+                    <p style="margin: 8px 0;"><strong>Registro:</strong> ${camping.n_registro}</p>
+                </div>
+            </div>
+            
+            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
+            
+            <p style="margin: 8px 0;"><strong>📍 Dirección:</strong> ${camping.direccion}</p>
+            <p style="margin: 8px 0;"><strong>📞 Teléfono:</strong> ${camping.telefono}</p>
+            <p style="margin: 8px 0;"><strong>📧 Email:</strong> ${camping.email}</p>
+            <p style="margin: 8px 0;"><strong>🌐 Web:</strong> <a href="http://${camping.web}" target="_blank" style="color: #2e7d32; text-decoration: none;">${camping.web}</a></p>
+            
+            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
+            
+            <p style="margin: 8px 0; font-size: 12px; color: #666;">📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}</p>
+        </div>
+    `;
+    
+    // Reemplazar el contenido del contenedor
+    contenedor.innerHTML = html;
+}
 
-// Función para inicializar el buscador del mapa
-function inicializarBuscadorMapa() {
-    const inputBuscador = document.getElementById('buscador-campings');
-    const btnLimpiar = document.getElementById('btn-limpiar-mapa');
+// ============================================
+// 5. ACTUALIZAR PANEL DE INFORMACIÓN
+// ============================================
+function actualizarPanelInfo(cantidad) {
+    const panel = document.querySelector('.informaion');
+    if (panel) {
+        panel.innerHTML = `
+            <div style="padding: 15px; text-align: center; color: #666;">
+                <p style="margin: 0; font-size: 14px;">
+                    <strong style="color: #2e7d32;">🏕️ ${cantidad} campings cargados</strong>
+                </p>
+                <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">
+                    Haz click en un marcador del mapa para ver la información
+                </p>
+            </div>
+        `;
+    }
+}
 
-    if (!inputBuscador || !btnLimpiar) return;
-
-    // Evento de búsqueda en tiempo real
-    inputBuscador.addEventListener('input', function() {
-        const termino = this.value.trim();
+// ============================================
+// 6. GUARDAR CAMPINGS EN BASE DE DATOS
+// ============================================
+async function guardarCampingsEnBD(campings) {
+    console.log('💾 Guardando campings en base de datos...');
+    console.log(`📊 Total de campings a guardar: ${campings.length}`);
+    console.log('📦 Estructura del primer camping:', campings[0]);
+    
+    try {
+        console.log('🔄 Enviando fetch...');
+        const response = await fetch('index.php?action=guardarCampings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(campings)
+        });
         
-        if (termino.length > 0) {
-            btnLimpiar.classList.add('visible');
-            buscarYFiltrarCampings(termino);
-        } else {
-            btnLimpiar.classList.remove('visible');
-            mostrarTodosLosMarcadores();
-            actualizarInfoPanel(marcadoresEnMapa.length);
+        console.log(`📡 Respuesta recibida - Status: ${response.status}`);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Respuesta no OK:', errorText);
+            throw new Error(`HTTP ${response.status}`);
         }
-    });
-
-    // Botón limpiar
-    btnLimpiar.addEventListener('click', function() {
-        inputBuscador.value = '';
-        this.classList.remove('visible');
-        mostrarTodosLosMarcadores();
-        actualizarInfoPanel(marcadoresEnMapa.length);
-        inputBuscador.focus();
-    });
-}
-
-// Función para buscar y filtrar campings en el mapa
-function buscarYFiltrarCampings(termino) {
-    const terminoLower = termino.toLowerCase();
-    const campingsFiltrados = todosLosCampings.filter(camping => {
-        return camping.nombre.toLowerCase().includes(terminoLower) ||
-               camping.provincia.toLowerCase().includes(terminoLower) ||
-               camping.municipio.toLowerCase().includes(terminoLower) ||
-               camping.localidad.toLowerCase().includes(terminoLower);
-    });
-
-    filtrarMarcadoresEnMapa(campingsFiltrados);
-    actualizarInfoPanel(campingsFiltrados.length, `Resultados para "${termino}"`);
-}
-
-// Función para filtrar marcadores en el mapa
-function filtrarMarcadoresEnMapa(campingsFiltrados) {
-    marcadoresEnMapa.forEach(marcador => {
-        const latMarcador = marcador.getLatLng().lat;
-        const lonMarcador = marcador.getLatLng().lng;
         
-        const estaEnFiltro = campingsFiltrados.some(camping => 
-            Math.abs(camping.lat - latMarcador) < 0.0001 && 
-            Math.abs(camping.lon - lonMarcador) < 0.0001
-        );
+        const resultado = await response.json();
+        console.log('✅ Respuesta del servidor:', resultado);
         
-        if (estaEnFiltro) {
-            if (!map.hasLayer(marcador)) {
-                marcador.addTo(map);
+        if (resultado.success) {
+            console.log(`✅ Campings guardados correctamente`);
+            console.log(`   - Insertados: ${resultado.insertados}`);
+            console.log(`   - Actualizados: ${resultado.actualizados}`);
+            if (resultado.errores && resultado.errores.length > 0) {
+                console.warn(`   - Errores: ${resultado.errores.length}`);
+                console.warn('   Detalles de errores:', resultado.errores);
             }
         } else {
-            if (map.hasLayer(marcador)) {
-                map.removeLayer(marcador);
+            console.error('❌ Error al guardar:', resultado.message);
+            if (resultado.debug) {
+                console.error('   Debug info:', resultado.debug);
             }
         }
-    });
+        
+        return resultado;
+    } catch (error) {
+        console.error('❌ Error en la petición:', error);
+        console.error('Stack:', error.stack);
+    }
 }
 
-// Función para mostrar todos los marcadores
-function mostrarTodosLosMarcadores() {
-    marcadoresEnMapa.forEach(marcador => {
-        if (!map.hasLayer(marcador)) {
-            marcador.addTo(map);
-        }
-    });
+// ============================================
+// 7. FLUJO PRINCIPAL
+// ============================================
+async function iniciarAplicacion() {
+    console.log('🚀 === INICIANDO APLICACIÓN ===');
+    
+    try {
+        // 1. Inicializar mapa
+        inicializarMapa();
+        
+        // 2. Extraer campings desde API pública
+        await extraerCampingsDesdeAPI();
+        
+        // 3. Refactorizar datos
+        const campingsRefactorizados = refactorizarCampings(campingsGlobal);
+        
+        // 4. Visualizar en mapa
+        visualizarCampingsEnMapa(campingsRefactorizados);
+        
+        // 5. Guardar en BD
+        await guardarCampingsEnBD(campingsRefactorizados);
+        
+        console.log('✅ === APLICACIÓN INICIADA CORRECTAMENTE ===');
+    } catch (error) {
+        console.error('❌ Error en iniciarAplicación:', error);
+    }
 }
 
-// Inicializar el buscador cuando se carga la página
-document.addEventListener('DOMContentLoaded', inicializarBuscadorMapa);
+// ============================================
+// 8. EJECUTAR AL CARGAR LA PÁGINA
+// ============================================
+document.addEventListener('DOMContentLoaded', iniciarAplicacion);

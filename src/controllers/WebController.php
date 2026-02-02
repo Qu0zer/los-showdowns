@@ -12,7 +12,7 @@
     public function favoritos($pdo){
         if(isset($_SESSION['usuario'])){
             $usuario = $_SESSION['usuario'];
-            require dirname(__DIR__) . '/views/web/Favoritos.php';
+            require dirname(__DIR__) . '/views/Favoritos.php';
         } else {
             header('Location: index.php?action=login');
             exit();

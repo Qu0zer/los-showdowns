@@ -27,19 +27,65 @@
 
         public static function obtenerCampingsPorUsuario($pdo, $id_usuario){
             try{
-                $sql = 'SELECT id_camping FROM favoritos WHERE id_usuario = :id_usuario';
+                $sql = 'SELECT c.* FROM campings c 
+                        INNER JOIN favoritos f ON c.n_registro = f.id_camping 
+                        WHERE f.id_usuario = :id_usuario';
                 $sentence = $pdo->prepare($sql);
                 $sentence->execute([
                     'id_usuario' => $id_usuario
                 ]);
-                $campingsPorUsuario = $sentence->fetch(PDO::FETCH_ASSOC);
-                if($campingsPorUsuario){
-                    return new self($campingsPorUsuario);
-                }
-                return false;
+                $campings = $sentence->fetchAll(PDO::FETCH_ASSOC);
+                return $campings;
 
             } catch(PDOException $e){
                 return false;
+            }
+        }
+
+        // Función para agregar un camping a favoritos
+        public static function agregarFavorito($pdo, $id_usuario, $id_camping){
+            try{
+                // Verificar si ya existe
+                $sql = 'SELECT id FROM favoritos WHERE id_usuario = :id_usuario AND id_camping = :id_camping';
+                $sentence = $pdo->prepare($sql);
+                $sentence->execute([
+                    'id_usuario' => $id_usuario,
+                    'id_camping' => $id_camping
+                ]);
+                
+                if($sentence->fetch()){
+                    return ['success' => false, 'message' => 'Ya está en favoritos'];
+                }
+
+                // Insertar nuevo favorito
+                $sql = 'INSERT INTO favoritos (id_usuario, id_camping) VALUES (:id_usuario, :id_camping)';
+                $sentence = $pdo->prepare($sql);
+                $result = $sentence->execute([
+                    'id_usuario' => $id_usuario,
+                    'id_camping' => $id_camping
+                ]);
+
+                return ['success' => $result, 'message' => $result ? 'Agregado a favoritos' : 'Error al agregar'];
+
+            } catch(PDOException $e){
+                return ['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()];
+            }
+        }
+
+        // Función para eliminar un camping de favoritos
+        public static function eliminarFavorito($pdo, $id_usuario, $id_camping){
+            try{
+                $sql = 'DELETE FROM favoritos WHERE id_usuario = :id_usuario AND id_camping = :id_camping';
+                $sentence = $pdo->prepare($sql);
+                $result = $sentence->execute([
+                    'id_usuario' => $id_usuario,
+                    'id_camping' => $id_camping
+                ]);
+
+                return ['success' => $result, 'message' => $result ? 'Eliminado de favoritos' : 'No se encontró en favoritos'];
+
+            } catch(PDOException $e){
+                return ['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()];
             }
         }
 

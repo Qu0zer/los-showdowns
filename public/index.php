@@ -4,17 +4,18 @@
 
     require_once dirname(__DIR__) . '/src/config/db.php'; // Conexión a la base de datos
     $pdo = Database::connect();
-    /*if($pdo){
-        echo 'Conexión exitosa!';
-    } else {
-        echo 'La conexión ha fallado';
-    }*/
-    $uri = $_SERVER['REQUEST_URI'];
-    // Dirigir al tipo de enrutamiento en función de la URL asignada
-    if(strpos($uri, '/api/') === 0){
+    
+    $action = $_GET['action'] ?? 'inicio';
+    
+    // Definir acciones que son de API
+    $apiActions = ['guardarCampings', 'cargarCampings', 'mostrarFavoritos', 'addFavoritos', 'deleteFavoritos'];
+    
+    // Detectar si es una llamada a la API
+    if(in_array($action, $apiActions)){
+        // Es una llamada a la API
         require_once dirname(__DIR__) . '/routes/api.php';
     } else {
+        // Es una llamada web normal (inicio, login, registro, favoritos, etc.)
         require_once dirname(__DIR__) . '/routes/web.php';
     }
-
 ?>

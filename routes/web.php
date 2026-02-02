@@ -8,7 +8,8 @@
             'inicio' => 'inicio',
             'favoritos' => 'favoritos',
             'login' => 'login',
-            'registro' => 'registro'
+            'registro' => 'registro',
+            'logout' => 'logout'
         ];
         $allowedViewsAuth = [
             'procesarLogin' => 'procesarLogin',
