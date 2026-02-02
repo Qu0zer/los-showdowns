@@ -41,5 +41,16 @@
         header('Location: index.php');
         exit();
     }
+
+    // Función para mostrar la página 404
+    public function error404($pdo) {
+        http_response_code(404);
+        require dirname(__DIR__) . '/views/404.php';
+    }
+
+    // Función para mostrar la página de consejos
+    public function consejos($pdo) {
+        require dirname(__DIR__) . '/views/Consejos.php';
+    }
     }
 ?>

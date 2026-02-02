@@ -1,0 +1,254 @@
+/* ESTILOS ESPECÍFICOS PARA LA PÁGINA DE CONSEJOS */
+
+.contenedor-consejos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    flex: 1;
+}
+
+.titulo-seccion {
+    text-align: center;
+    margin-bottom: 50px;
+    padding: 30px;
+    background: linear-gradient(135deg, var(--verde-principal), var(--verde-oscuro));
+    color: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.titulo-seccion h2 {
+    font-family: 'Chiller', cursive;
+    font-size: 3rem;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.titulo-seccion p {
+    font-size: 1.2rem;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.grid-consejos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.categoria-consejo {
+    background-color: var(--blanco);
+    border: 3px solid var(--azul-oscuro);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 8px 8px 0px var(--azul-oscuro);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: fit-content;
+}
+
+.categoria-consejo:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 10px 10px 0px var(--azul-oscuro);
+}
+
+.categoria-consejo.especial {
+    border-color: var(--verde-principal);
+    box-shadow: 10px 10px 0px var(--verde-principal);
+    background: linear-gradient(135deg, #fff, #f8fff8);
+}
+
+.categoria-consejo.especial:hover {
+    box-shadow: 10px 10px 0px var(--verde-principal);
+}
+
+.icono-categoria {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 12px;
+    animation: flotar 3s ease-in-out infinite;
+}
+
+@keyframes flotar {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.categoria-consejo h3 {
+    font-family: 'Chiller', cursive;
+    font-size: 1.8rem;
+    color: var(--verde-oscuro);
+    text-align: center;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--verde-principal);
+    padding-bottom: 8px;
+}
+
+.consejos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.consejo-item {
+    background-color: var(--amarillo-fondo);
+    padding: 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--verde-principal);
+    transition: all 0.3s ease;
+}
+
+.consejo-item:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+    transform: translateX(3px);
+    border-left-width: 4px;
+}
+
+.consejo-item h4 {
+    color: var(--verde-oscuro);
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.consejo-item p {
+    margin: 0;
+    color: #444;
+    line-height: 1.4;
+    font-size: 0.9rem;
+}
+
+.cta-final {
+    text-align: center;
+    background-color: var(--azul-oscuro);
+    color: white;
+    padding: 40px;
+    border-radius: 20px;
+    margin-top: 40px;
+}
+
+.cta-final h3 {
+    font-family: 'Chiller', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: var(--verde-principal);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.cta-final p {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+    opacity: 0.9;
+}
+
+.boton-grande {
+    font-size: 1.3rem !important;
+    padding: 20px 40px !important;
+    animation: pulso 2s ease-in-out infinite;
+}
+
+@keyframes pulso {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+    .grid-consejos {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+}
+
+@media (max-width: 992px) {
+    .grid-consejos {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .categoria-consejo {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .contenedor-consejos {
+        padding: 20px 15px;
+    }
+    
+    .titulo-seccion {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .titulo-seccion h2 {
+        font-size: 2.5rem;
+    }
+    
+    .titulo-seccion p {
+        font-size: 1.1rem;
+    }
+    
+    .grid-consejos {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .categoria-consejo {
+        padding: 20px;
+    }
+    
+    .categoria-consejo h3 {
+        font-size: 1.8rem;
+    }
+    
+    .icono-categoria {
+        font-size: 2.5rem;
+    }
+    
+    .cta-final {
+        padding: 30px 20px;
+    }
+    
+    .cta-final h3 {
+        font-size: 2rem;
+    }
+    
+    .boton-grande {
+        font-size: 1.1rem !important;
+        padding: 15px 30px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo-seccion h2 {
+        font-size: 2rem;
+    }
+    
+    .categoria-consejo h3 {
+        font-size: 1.6rem;
+    }
+    
+    .consejo-item {
+        padding: 12px;
+    }
+    
+    .consejo-item h4 {
+        font-size: 1rem;
+    }
+    
+    .consejo-item p {
+        font-size: 0.9rem;
+    }
+}

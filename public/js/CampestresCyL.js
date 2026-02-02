@@ -298,16 +298,19 @@ async function iniciarAplicacion() {
         // 1. Inicializar mapa
         inicializarMapa();
         
-        // 2. Extraer campings desde API pública
+        // 2. Obtener clima actual (en paralelo)
+        obtenerClimaActual();
+        
+        // 3. Extraer campings desde API pública
         await extraerCampingsDesdeAPI();
         
-        // 3. Refactorizar datos
+        // 4. Refactorizar datos
         const campingsRefactorizados = refactorizarCampings(campingsGlobal);
         
-        // 4. Visualizar en mapa
+        // 5. Visualizar en mapa
         visualizarCampingsEnMapa(campingsRefactorizados);
         
-        // 5. Guardar en BD
+        // 6. Guardar en BD
         await guardarCampingsEnBD(campingsRefactorizados);
         
         console.log('✅ === APLICACIÓN INICIADA CORRECTAMENTE ===');
@@ -317,6 +320,110 @@ async function iniciarAplicacion() {
 }
 
 // ============================================
-// 8. EJECUTAR AL CARGAR LA PÁGINA
+// 8. FUNCIONALIDAD DEL CLIMA
+// ============================================
+async function obtenerClimaActual() {
+    console.log('🌤️ Obteniendo clima actual...');
+    
+    try {
+        // Usamos Valladolid como referencia para Castilla y León
+        const lat = 41.6523;
+        const lon = -4.7245;
+        
+        // API gratuita de OpenWeatherMap (sin necesidad de API key para datos básicos)
+        // Usaremos una API alternativa gratuita
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=Europe%2FMadrid&forecast_days=1`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('🌤️ Datos del clima recibidos:', data);
+        
+        mostrarClimaEnPagina(data);
+        
+    } catch (error) {
+        console.error('❌ Error obteniendo clima:', error);
+        mostrarErrorClima();
+    }
+}
+
+function mostrarClimaEnPagina(data) {
+    const climaContenido = document.getElementById('clima-contenido');
+    
+    if (!climaContenido) {
+        console.error('❌ No se encontró el contenedor del clima');
+        return;
+    }
+    
+    const clima = data.current_weather;
+    const temperatura = Math.round(clima.temperature);
+    const velocidadViento = Math.round(clima.windspeed);
+    
+    // Determinar icono del clima basado en el código
+    let iconoClima = '🌤️';
+    let descripcion = 'Parcialmente nublado';
+    
+    if (clima.weathercode === 0) {
+        iconoClima = '☀️';
+        descripcion = 'Despejado';
+    } else if (clima.weathercode <= 3) {
+        iconoClima = '⛅';
+        descripcion = 'Parcialmente nublado';
+    } else if (clima.weathercode <= 48) {
+        iconoClima = '☁️';
+        descripcion = 'Nublado';
+    } else if (clima.weathercode <= 67) {
+        iconoClima = '🌧️';
+        descripcion = 'Lluvia';
+    } else if (clima.weathercode <= 77) {
+        iconoClima = '🌨️';
+        descripcion = 'Nieve';
+    } else {
+        iconoClima = '⛈️';
+        descripcion = 'Tormenta';
+    }
+    
+    const html = `
+        <div style="font-size: 1.2rem; margin-bottom: 15px;">
+            <span style="font-size: 2rem;">${iconoClima}</span>
+            <strong style="color: var(--verde-oscuro);">${temperatura}°C</strong>
+        </div>
+        <p style="margin: 10px 0; color: #666;">${descripcion}</p>
+        <div class="clima-info">
+            <div class="clima-item">
+                <strong>🌡️ Temperatura</strong>
+                ${temperatura}°C
+            </div>
+            <div class="clima-item">
+                <strong>💨 Viento</strong>
+                ${velocidadViento} km/h
+            </div>
+        </div>
+        <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
+            📍 Datos de Valladolid (referencia regional)
+        </p>
+    `;
+    
+    climaContenido.innerHTML = html;
+    console.log('✅ Clima mostrado correctamente');
+}
+
+function mostrarErrorClima() {
+    const climaContenido = document.getElementById('clima-contenido');
+    
+    if (climaContenido) {
+        climaContenido.innerHTML = `
+            <div style="color: #666; text-align: center;">
+                <p>⚠️ No se pudo cargar el clima</p>
+                <p style="font-size: 0.8rem;">Inténtalo más tarde</p>
+            </div>
+        `;
+    }
+}
+
+// ============================================
+// 9. EJECUTAR AL CARGAR LA PÁGINA
 // ============================================
 document.addEventListener('DOMContentLoaded', iniciarAplicacion);

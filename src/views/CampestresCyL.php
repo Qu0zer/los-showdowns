@@ -13,13 +13,16 @@
     <div class="contenido-cabecera">
         <h1>CampestresCyL</h1>
         <div class="botones-superiores">
-            <a href="index.php?action=login"><button class="boton-estilo">⭐ Inicio-sesion</button></a>
-            <a href="index.php?action=registro"><button class="boton-estilo">⭐ Registrarse</button></a>
+            <a href="index.php?action=login"><button class="boton-estilo">Inicio-sesion</button></a>
+            <a href="index.php?action=registro"><button class="boton-estilo">Registrarse</button></a>
         </div>
         <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
         <div class="acciones">
             <a href="index.php?action=favoritos">
                 <button class="boton-estilo">⭐ Favoritos</button>
+            </a>
+            <a href="index.php?action=consejos">
+                <button class="boton-estilo">💡 Consejos</button>
             </a>
         </div>
     </div>
@@ -34,6 +37,14 @@
             </div>
         </div>
         <div id="mapa-interactivo"></div>
+        
+        <!-- Sección del clima -->
+        <div class="clima-actual">
+            <h3>🌤️ Clima en Castilla y León</h3>
+            <div id="clima-contenido">
+                <p>Cargando información del clima...</p>
+            </div>
+        </div>
     </section>
     <div class="informaion">
         <h3>Información sobre los campings</h3>

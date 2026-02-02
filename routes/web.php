@@ -9,7 +9,9 @@
             'favoritos' => 'favoritos',
             'login' => 'login',
             'registro' => 'registro',
-            'logout' => 'logout'
+            'logout' => 'logout',
+            'consejos' => 'consejos',
+            '404' => 'error404'
         ];
         $allowedViewsAuth = [
             'procesarLogin' => 'procesarLogin',
@@ -24,8 +26,7 @@
             $controllerMethod = $allowedViewsAuth[$action];
             $authController->$controllerMethod($pdo);
         } else {
-            http_response_code(404);
-            require dirname(__DIR__) . '/src/views/404.php';
+            $webController->error404($pdo);
         }
 
     } catch (Exception $e){
