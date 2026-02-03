@@ -416,6 +416,107 @@ body {
     margin-bottom: 20px;
 }
 
+/* --- ESTILOS PARA INFORMACIÓN DE CAMPING --- */
+.camping-info-container {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.camping-titulo {
+    color: #2e7d32;
+    margin: 0 0 15px 0;
+    font-size: 20px;
+}
+
+.camping-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.camping-columna p {
+    margin: 8px 0;
+}
+
+.camping-separador {
+    margin: 15px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.camping-link {
+    color: #2e7d32;
+    text-decoration: none;
+}
+
+.camping-coordenadas {
+    margin: 8px 0;
+    font-size: 12px;
+    color: #666;
+}
+
+/* --- ESTILOS PARA PANEL DE INFORMACIÓN INICIAL --- */
+.panel-info-container {
+    padding: 15px;
+    text-align: center;
+    color: #666;
+}
+
+.panel-info-titulo {
+    margin: 0;
+    font-size: 14px;
+}
+
+.panel-info-titulo-destacado {
+    color: #2e7d32;
+}
+
+.panel-info-subtitulo {
+    margin: 10px 0 0 0;
+    font-size: 12px;
+    color: #999;
+}
+
+/* --- ESTILOS PARA CLIMA --- */
+.clima-temperatura-container {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.clima-icono {
+    font-size: 2rem;
+}
+
+.clima-temperatura {
+    color: var(--verde-oscuro);
+}
+
+.clima-descripcion {
+    margin: 10px 0;
+    color: #666;
+}
+
+.clima-referencia {
+    font-size: 0.8rem;
+    color: #999;
+    margin-top: 15px;
+}
+
+.clima-error-container {
+    color: #666;
+    text-align: center;
+}
+
+.clima-error-mensaje {
+    margin: 0;
+}
+
+.clima-error-subtitulo {
+    font-size: 0.8rem;
+}
+
 /* --- PIE DE PÁGINA --- */
 .pie-de-pagina {
     background-color: var(--azul-oscuro);

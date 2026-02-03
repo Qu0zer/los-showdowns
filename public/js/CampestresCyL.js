@@ -124,38 +124,103 @@ function mostrarInformacionEnContenedor(camping) {
         return;
     }
     
-    // Crear HTML con la información del camping
-    const html = `
-        <div style="padding: 15px; background-color: #f5f5f5; border-radius: 8px;">
-            <h3 style="color: #2e7d32; margin: 0 0 15px 0; font-size: 20px;">🏕️ ${camping.nombre}</h3>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                <div>
-                    <p style="margin: 8px 0;"><strong>Provincia:</strong> ${camping.provincia}</p>
-                    <p style="margin: 8px 0;"><strong>Municipio:</strong> ${camping.municipio}</p>
-                    <p style="margin: 8px 0;"><strong>Localidad:</strong> ${camping.localidad}</p>
-                </div>
-                <div>
-                    <p style="margin: 8px 0;"><strong>Plazas:</strong> ${camping.plazas}</p>
-                    <p style="margin: 8px 0;"><strong>Registro:</strong> ${camping.n_registro}</p>
-                </div>
-            </div>
-            
-            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-            
-            <p style="margin: 8px 0;"><strong>📍 Dirección:</strong> ${camping.direccion}</p>
-            <p style="margin: 8px 0;"><strong>📞 Teléfono:</strong> ${camping.telefono}</p>
-            <p style="margin: 8px 0;"><strong>📧 Email:</strong> ${camping.email}</p>
-            <p style="margin: 8px 0;"><strong>🌐 Web:</strong> <a href="http://${camping.web}" target="_blank" style="color: #2e7d32; text-decoration: none;">${camping.web}</a></p>
-            
-            <hr style="margin: 15px 0; border: none; border-top: 1px solid #ddd;">
-            
-            <p style="margin: 8px 0; font-size: 12px; color: #666;">📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}</p>
-        </div>
-    `;
+    // Limpiar contenedor
+    contenedor.innerHTML = '';
     
-    // Reemplazar el contenido del contenedor
-    contenedor.innerHTML = html;
+    // Crear contenedor principal
+    const mainContainer = document.createElement('div');
+    mainContainer.className = 'camping-info-container';
+    
+    // Título
+    const titulo = document.createElement('h3');
+    titulo.className = 'camping-titulo';
+    titulo.textContent = `🏕️ ${camping.nombre}`;
+    mainContainer.appendChild(titulo);
+    
+    // Grid de información
+    const grid = document.createElement('div');
+    grid.className = 'camping-grid';
+    
+    // Columna izquierda
+    const columnaIzq = document.createElement('div');
+    columnaIzq.className = 'camping-columna';
+    
+    const provincia = document.createElement('p');
+    provincia.innerHTML = '<strong>Provincia:</strong> ' + camping.provincia;
+    columnaIzq.appendChild(provincia);
+    
+    const municipio = document.createElement('p');
+    municipio.innerHTML = '<strong>Municipio:</strong> ' + camping.municipio;
+    columnaIzq.appendChild(municipio);
+    
+    const localidad = document.createElement('p');
+    localidad.innerHTML = '<strong>Localidad:</strong> ' + camping.localidad;
+    columnaIzq.appendChild(localidad);
+    
+    grid.appendChild(columnaIzq);
+    
+    // Columna derecha
+    const columnaDer = document.createElement('div');
+    columnaDer.className = 'camping-columna';
+    
+    const plazas = document.createElement('p');
+    plazas.innerHTML = '<strong>Plazas:</strong> ' + camping.plazas;
+    columnaDer.appendChild(plazas);
+    
+    const registro = document.createElement('p');
+    registro.innerHTML = '<strong>Registro:</strong> ' + camping.n_registro;
+    columnaDer.appendChild(registro);
+    
+    grid.appendChild(columnaDer);
+    mainContainer.appendChild(grid);
+    
+    // Separador
+    const separador1 = document.createElement('hr');
+    separador1.className = 'camping-separador';
+    mainContainer.appendChild(separador1);
+    
+    // Dirección
+    const direccion = document.createElement('p');
+    direccion.innerHTML = '<strong>📍 Dirección:</strong> ' + camping.direccion;
+    mainContainer.appendChild(direccion);
+    
+    // Teléfono
+    const telefono = document.createElement('p');
+    telefono.innerHTML = '<strong>📞 Teléfono:</strong> ' + camping.telefono;
+    mainContainer.appendChild(telefono);
+    
+    // Email
+    const email = document.createElement('p');
+    email.innerHTML = '<strong>📧 Email:</strong> ' + camping.email;
+    mainContainer.appendChild(email);
+    
+    // Web
+    const webP = document.createElement('p');
+    const webStrong = document.createElement('strong');
+    webStrong.textContent = '🌐 Web: ';
+    webP.appendChild(webStrong);
+    
+    const webLink = document.createElement('a');
+    webLink.href = 'http://' + camping.web;
+    webLink.target = '_blank';
+    webLink.className = 'camping-link';
+    webLink.textContent = camping.web;
+    webP.appendChild(webLink);
+    mainContainer.appendChild(webP);
+    
+    // Separador
+    const separador2 = document.createElement('hr');
+    separador2.className = 'camping-separador';
+    mainContainer.appendChild(separador2);
+    
+    // Coordenadas
+    const coordenadas = document.createElement('p');
+    coordenadas.className = 'camping-coordenadas';
+    coordenadas.textContent = `📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}`;
+    mainContainer.appendChild(coordenadas);
+    
+    // Añadir al contenedor
+    contenedor.appendChild(mainContainer);
 }
 
 // ============================================
@@ -163,18 +228,34 @@ function mostrarInformacionEnContenedor(camping) {
 // ============================================
 function actualizarPanelInfo(cantidad) {
     const panel = document.querySelector('.informaion');
-    if (panel) {
-        panel.innerHTML = `
-            <div style="padding: 15px; text-align: center; color: #666;">
-                <p style="margin: 0; font-size: 14px;">
-                    <strong style="color: #2e7d32;">🏕️ ${cantidad} campings cargados</strong>
-                </p>
-                <p style="margin: 10px 0 0 0; font-size: 12px; color: #999;">
-                    Haz click en un marcador del mapa para ver la información
-                </p>
-            </div>
-        `;
-    }
+    if (!panel) return;
+    
+    // Limpiar panel
+    panel.innerHTML = '';
+    
+    // Crear contenedor
+    const container = document.createElement('div');
+    container.className = 'panel-info-container';
+    
+    // Título principal
+    const titulo = document.createElement('p');
+    titulo.className = 'panel-info-titulo';
+    
+    const tituloDestacado = document.createElement('strong');
+    tituloDestacado.className = 'panel-info-titulo-destacado';
+    tituloDestacado.textContent = `🏕️ ${cantidad} campings cargados`;
+    
+    titulo.appendChild(tituloDestacado);
+    container.appendChild(titulo);
+    
+    // Subtítulo
+    const subtitulo = document.createElement('p');
+    subtitulo.className = 'panel-info-subtitulo';
+    subtitulo.textContent = 'Haz click en un marcador del mapa para ver la información';
+    container.appendChild(subtitulo);
+    
+    // Añadir al panel
+    panel.appendChild(container);
 }
 
 // ============================================
@@ -245,6 +326,9 @@ function mostrarClimaEnPagina(data) {
         return;
     }
     
+    // Limpiar contenedor
+    climaContenido.innerHTML = '';
+    
     const clima = data.current_weather;
     const temperatura = Math.round(clima.temperature);
     const velocidadViento = Math.round(clima.windspeed);
@@ -273,42 +357,94 @@ function mostrarClimaEnPagina(data) {
         descripcion = 'Tormenta';
     }
     
-    const html = `
-        <div style="font-size: 1.2rem; margin-bottom: 15px;">
-            <span style="font-size: 2rem;">${iconoClima}</span>
-            <strong style="color: var(--verde-oscuro);">${temperatura}°C</strong>
-        </div>
-        <p style="margin: 10px 0; color: #666;">${descripcion}</p>
-        <div class="clima-info">
-            <div class="clima-item">
-                <strong>🌡️ Temperatura</strong>
-                ${temperatura}°C
-            </div>
-            <div class="clima-item">
-                <strong>💨 Viento</strong>
-                ${velocidadViento} km/h
-            </div>
-        </div>
-        <p style="font-size: 0.8rem; color: #999; margin-top: 15px;">
-            📍 Datos de Valladolid (referencia regional)
-        </p>
-    `;
+    // Contenedor de temperatura
+    const tempContainer = document.createElement('div');
+    tempContainer.className = 'clima-temperatura-container';
     
-    climaContenido.innerHTML = html;
+    const icono = document.createElement('span');
+    icono.className = 'clima-icono';
+    icono.textContent = iconoClima;
+    tempContainer.appendChild(icono);
+    
+    const temp = document.createElement('strong');
+    temp.className = 'clima-temperatura';
+    temp.textContent = ` ${temperatura}°C`;
+    tempContainer.appendChild(temp);
+    
+    climaContenido.appendChild(tempContainer);
+    
+    // Descripción
+    const desc = document.createElement('p');
+    desc.className = 'clima-descripcion';
+    desc.textContent = descripcion;
+    climaContenido.appendChild(desc);
+    
+    // Info del clima
+    const climaInfo = document.createElement('div');
+    climaInfo.className = 'clima-info';
+    
+    // Item temperatura
+    const itemTemp = document.createElement('div');
+    itemTemp.className = 'clima-item';
+    
+    const strongTemp = document.createElement('strong');
+    strongTemp.textContent = '🌡️ Temperatura';
+    itemTemp.appendChild(strongTemp);
+    
+    const textTemp = document.createTextNode(` ${temperatura}°C`);
+    itemTemp.appendChild(textTemp);
+    
+    climaInfo.appendChild(itemTemp);
+    
+    // Item viento
+    const itemViento = document.createElement('div');
+    itemViento.className = 'clima-item';
+    
+    const strongViento = document.createElement('strong');
+    strongViento.textContent = '💨 Viento';
+    itemViento.appendChild(strongViento);
+    
+    const textViento = document.createTextNode(` ${velocidadViento} km/h`);
+    itemViento.appendChild(textViento);
+    
+    climaInfo.appendChild(itemViento);
+    climaContenido.appendChild(climaInfo);
+    
+    // Referencia
+    const referencia = document.createElement('p');
+    referencia.className = 'clima-referencia';
+    referencia.textContent = '📍 Datos de Valladolid (referencia regional)';
+    climaContenido.appendChild(referencia);
+    
     console.log('✅ Clima mostrado correctamente');
 }
 
 function mostrarErrorClima() {
     const climaContenido = document.getElementById('clima-contenido');
     
-    if (climaContenido) {
-        climaContenido.innerHTML = `
-            <div style="color: #666; text-align: center;">
-                <p>⚠️ No se pudo cargar el clima</p>
-                <p style="font-size: 0.8rem;">Inténtalo más tarde</p>
-            </div>
-        `;
-    }
+    if (!climaContenido) return;
+    
+    // Limpiar contenedor
+    climaContenido.innerHTML = '';
+    
+    // Crear contenedor de error
+    const errorContainer = document.createElement('div');
+    errorContainer.className = 'clima-error-container';
+    
+    // Mensaje principal
+    const mensaje = document.createElement('p');
+    mensaje.className = 'clima-error-mensaje';
+    mensaje.textContent = '⚠️ No se pudo cargar el clima';
+    errorContainer.appendChild(mensaje);
+    
+    // Subtítulo
+    const subtitulo = document.createElement('p');
+    subtitulo.className = 'clima-error-subtitulo';
+    subtitulo.textContent = 'Inténtalo más tarde';
+    errorContainer.appendChild(subtitulo);
+    
+    // Añadir al contenedor
+    climaContenido.appendChild(errorContainer);
 }
 
 // ============================================

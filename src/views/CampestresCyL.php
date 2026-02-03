@@ -40,10 +40,6 @@
     <section class="Mapa-CyL">
         <div class="mapa">
             <h2>Mapa interactivo de Castilla y León</h2>
-            <div class="buscador-mapa">
-                <input type="text" id="buscador-campings" placeholder="🔍 Buscar campings..." class="input-buscador-mapa">
-                <button id="btn-limpiar-mapa" class="btn-limpiar-mapa">✕</button>
-            </div>
         </div>
         <div id="mapa-interactivo"></div>
         
