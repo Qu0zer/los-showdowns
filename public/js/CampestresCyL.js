@@ -30,140 +30,80 @@ function inicializarMapa() {
 }
 
 // ============================================
-// 2. EXTRAER DATOS DE API PÚBLICA
+// 2. CARGAR CAMPINGS DESDE BACKEND (BD)
 // ============================================
-async function extraerCampingsDesdeAPI() {
-    console.log('🔄 Extrayendo campings desde API pública...');
+async function cargarCampingsDesdeBackend() {
+    console.log('🔄 Cargando campings desde backend (BD)...');
     
-    const provincias = ['León', 'Salamanca', 'Burgos', 'Ávila', 'Soria', 'Segovia', 'Palencia', 'Valladolid', 'Zamora'];
-    let totalCampings = 0;
-    
-    for (const provincia of provincias) {
-        try {
-            const apiUrl = `https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/registro-de-turismo-de-castilla-y-leon/records?where=provincia%20%3D%20%27${encodeURIComponent(provincia)}%27&limit=100&refine=establecimiento%3A%22Campings%22`;
-            
-            console.log(`📍 Cargando campings de ${provincia}...`);
-            const response = await fetch(apiUrl);
-            
-            if (!response.ok) {
-                console.error(`❌ Error en ${provincia}: HTTP ${response.status}`);
-                continue;
-            }
-            
-            const data = await response.json();
-            
-            if (data.results && Array.isArray(data.results)) {
-                console.log(`   ✅ ${data.results.length} campings encontrados en ${provincia}`);
-                
-                // DEBUG: Mostrar estructura del primer camping
-                if (data.results.length > 0) {
-                    console.log('🔍 ESTRUCTURA DEL PRIMER CAMPING:', data.results[0]);
-                }
-                
-                campingsGlobal = campingsGlobal.concat(data.results);
-                totalCampings += data.results.length;
-            }
-        } catch (error) {
-            console.error(`❌ Error al cargar ${provincia}:`, error);
+    try {
+        const response = await fetch('index.php?action=cargarCampings');
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
         }
+        
+        const campings = await response.json();
+        
+        if (Array.isArray(campings)) {
+            console.log(`✅ ${campings.length} campings cargados desde BD`);
+            return campings;
+        } else {
+            console.error('❌ Formato de respuesta inválido');
+            return [];
+        }
+    } catch (error) {
+        console.error('❌ Error cargando campings desde backend:', error);
+        return [];
     }
-    
-    console.log(`🏕️ Total de campings extraídos: ${totalCampings}`);
-    return campingsGlobal;
 }
 
 // ============================================
-// 3. REFACTORIZAR DATOS (Extraer solo lo que necesitamos)
-// ============================================
-function refactorizarCampings(campingsRaw) {
-    console.log('🔧 Refactorizando datos...');
-    
-    const campingsRefactorizados = [];
-    let sinCoordenadas = 0;
-    
-    campingsRaw.forEach((camping, index) => {
-        try {
-            // Los datos vienen directamente en el objeto camping, no en camping.fields
-            const data = camping;
-            
-            // Obtener coordenadas de posicion (que es un objeto con lat y lon)
-            let lat, lon;
-            
-            if (data.posicion && typeof data.posicion === 'object') {
-                lat = parseFloat(data.posicion.lat);
-                lon = parseFloat(data.posicion.lon);
-            } else if (data.gps_latitud && data.gps_longitud) {
-                lat = parseFloat(data.gps_latitud);
-                lon = parseFloat(data.gps_longitud);
-            } else if (data.latitud && data.longitud) {
-                lat = parseFloat(data.latitud);
-                lon = parseFloat(data.longitud);
-            } else {
-                sinCoordenadas++;
-                return;
-            }
-            
-            // Validar que las coordenadas sean números válidos
-            if (isNaN(lat) || isNaN(lon)) {
-                sinCoordenadas++;
-                return;
-            }
-            
-            // Validar que esté en Castilla y León
-            if (lat < 40.0 || lat > 43.5 || lon < -7.5 || lon > -1.5) {
-                console.warn(`⚠️ Fuera de límites: ${data.nombre} [${lat}, ${lon}]`);
-                return;
-            }
-            
-            // Extraer solo los datos que necesitamos
-            const campingRefactorizado = {
-                n_registro: data.n_registro || null,
-                nombre: data.nombre || 'Sin nombre',
-                provincia: data.provincia || 'No especificado',
-                municipio: data.municipio || 'No especificado',
-                localidad: data.localidad || 'No especificado',
-                direccion: data.direccion || 'No especificado',
-                telefono: data.telefono_1 || 'No disponible',
-                email: data.email || 'No disponible',
-                web: data.web || 'No disponible',
-                plazas: data.plazas || 'No especificado',
-                latitud: lat,
-                longitud: lon
-            };
-            
-            campingsRefactorizados.push(campingRefactorizado);
-        } catch (error) {
-            console.error(`❌ Error refactorizando camping ${index}:`, error);
-        }
-    });
-    
-    console.log(`✅ ${campingsRefactorizados.length} campings refactorizados correctamente`);
-    console.log(`⚠️ ${sinCoordenadas} campings sin coordenadas válidas`);
-    return campingsRefactorizados;
-}
-
-// ============================================
-// 4. VISUALIZAR CAMPINGS EN EL MAPA
+// 3. VISUALIZAR CAMPINGS EN EL MAPA
 // ============================================
 function visualizarCampingsEnMapa(campings) {
     console.log('📍 Visualizando campings en el mapa...');
     
     campings.forEach((camping) => {
         try {
-            const marker = L.marker([camping.latitud, camping.longitud]).addTo(map);
+            // Los datos vienen de BD con nombres de columna diferentes
+            const lat = parseFloat(camping.latitud);
+            const lon = parseFloat(camping.longitud);
+            
+            if (isNaN(lat) || isNaN(lon)) {
+                console.warn(`⚠️ Coordenadas inválidas para ${camping.nombre_camping}`);
+                return;
+            }
+            
+            const marker = L.marker([lat, lon]).addTo(map);
+            
+            // Adaptar estructura para mostrarInformacionEnContenedor
+            const campingAdaptado = {
+                nombre: camping.nombre_camping,
+                provincia: camping.provincia,
+                municipio: camping.municipio,
+                localidad: camping.localidad,
+                direccion: camping.direccion,
+                telefono: camping.telefono,
+                email: camping.email,
+                web: camping.web,
+                plazas: camping.plazas,
+                n_registro: camping.n_registro,
+                latitud: lat,
+                longitud: lon
+            };
             
             // Al hacer click en el marcador, mostrar información en el contenedor
             marker.on('click', function() {
-                mostrarInformacionEnContenedor(camping);
+                mostrarInformacionEnContenedor(campingAdaptado);
             });
             
             // Guardar referencia del marcador
             marcadores.push({
                 marker: marker,
-                camping: camping
+                camping: campingAdaptado
             });
         } catch (error) {
-            console.error(`❌ Error creando marcador para ${camping.nombre}:`, error);
+            console.error(`❌ Error creando marcador para ${camping.nombre_camping}:`, error);
         }
     });
     
@@ -172,7 +112,7 @@ function visualizarCampingsEnMapa(campings) {
 }
 
 // ============================================
-// 4.5 MOSTRAR INFORMACIÓN EN CONTENEDOR
+// 4. MOSTRAR INFORMACIÓN EN CONTENEDOR
 // ============================================
 function mostrarInformacionEnContenedor(camping) {
     console.log('📋 Mostrando información de:', camping.nombre);
@@ -238,58 +178,7 @@ function actualizarPanelInfo(cantidad) {
 }
 
 // ============================================
-// 6. GUARDAR CAMPINGS EN BASE DE DATOS
-// ============================================
-async function guardarCampingsEnBD(campings) {
-    console.log('💾 Guardando campings en base de datos...');
-    console.log(`📊 Total de campings a guardar: ${campings.length}`);
-    console.log('📦 Estructura del primer camping:', campings[0]);
-    
-    try {
-        console.log('🔄 Enviando fetch...');
-        const response = await fetch('index.php?action=guardarCampings', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(campings)
-        });
-        
-        console.log(`📡 Respuesta recibida - Status: ${response.status}`);
-        
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ Respuesta no OK:', errorText);
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const resultado = await response.json();
-        console.log('✅ Respuesta del servidor:', resultado);
-        
-        if (resultado.success) {
-            console.log(`✅ Campings guardados correctamente`);
-            console.log(`   - Insertados: ${resultado.insertados}`);
-            console.log(`   - Actualizados: ${resultado.actualizados}`);
-            if (resultado.errores && resultado.errores.length > 0) {
-                console.warn(`   - Errores: ${resultado.errores.length}`);
-                console.warn('   Detalles de errores:', resultado.errores);
-            }
-        } else {
-            console.error('❌ Error al guardar:', resultado.message);
-            if (resultado.debug) {
-                console.error('   Debug info:', resultado.debug);
-            }
-        }
-        
-        return resultado;
-    } catch (error) {
-        console.error('❌ Error en la petición:', error);
-        console.error('Stack:', error.stack);
-    }
-}
-
-// ============================================
-// 7. FLUJO PRINCIPAL
+// 6. FLUJO PRINCIPAL
 // ============================================
 async function iniciarAplicacion() {
     console.log('🚀 === INICIANDO APLICACIÓN ===');
@@ -301,17 +190,16 @@ async function iniciarAplicacion() {
         // 2. Obtener clima actual (en paralelo)
         obtenerClimaActual();
         
-        // 3. Extraer campings desde API pública
-        await extraerCampingsDesdeAPI();
+        // 3. Cargar campings desde backend (BD)
+        const campings = await cargarCampingsDesdeBackend();
         
-        // 4. Refactorizar datos
-        const campingsRefactorizados = refactorizarCampings(campingsGlobal);
+        if (campings.length === 0) {
+            console.warn('⚠️ No se cargaron campings');
+            return;
+        }
         
-        // 5. Visualizar en mapa
-        visualizarCampingsEnMapa(campingsRefactorizados);
-        
-        // 6. Guardar en BD
-        await guardarCampingsEnBD(campingsRefactorizados);
+        // 4. Visualizar en mapa
+        visualizarCampingsEnMapa(campings);
         
         console.log('✅ === APLICACIÓN INICIADA CORRECTAMENTE ===');
     } catch (error) {
@@ -320,7 +208,7 @@ async function iniciarAplicacion() {
 }
 
 // ============================================
-// 8. FUNCIONALIDAD DEL CLIMA
+// 7. FUNCIONALIDAD DEL CLIMA
 // ============================================
 async function obtenerClimaActual() {
     console.log('🌤️ Obteniendo clima actual...');
@@ -424,6 +312,6 @@ function mostrarErrorClima() {
 }
 
 // ============================================
-// 9. EJECUTAR AL CARGAR LA PÁGINA
+// 8. EJECUTAR AL CARGAR LA PÁGINA
 // ============================================
 document.addEventListener('DOMContentLoaded', iniciarAplicacion);

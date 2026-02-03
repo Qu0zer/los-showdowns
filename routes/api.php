@@ -8,7 +8,7 @@
             $action = $_GET['action'] ?? '';
             
             $allowedApiActions = [
-                'guardarCampings' => 'guardarCampings',
+                'cargarCampings' => 'cargarCampings',
                 'mostrarFavoritos' => 'mostrarFavoritos',
                 'addFavoritos' => 'addFavoritos',
                 'deleteFavoritos' => 'deleteFavoritos',
@@ -19,13 +19,10 @@
             if(isset($allowedApiActions[$action])){
                 
                 switch($allowedApiActions[$action]){
-                    case 'guardarCampings':
-                        if($api_method === 'POST'){
-                            $resultado = $apiController->guardarCampings($pdo);
-                            echo json_encode($resultado);
-                        } else {
-                            echo json_encode(['success' => false, 'message' => 'Método POST requerido']);
-                        }
+                    case 'cargarCampings':
+                        // Cargar campings desde BD (GET)
+                        $campings = $apiController->cargarCampings($pdo);
+                        echo json_encode($campings);
                         break;
                     case 'mostrarFavoritos':
                         $favoritos = $apiController->mostrarFavoritos($pdo);

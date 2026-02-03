@@ -8,7 +8,7 @@
     $action = $_GET['action'] ?? 'inicio';
     
     // Definir acciones que son de API
-    $apiActions = ['guardarCampings', 'cargarCampings', 'mostrarFavoritos', 'addFavoritos', 'deleteFavoritos', 'procesarLogin', 'procesarRegistro'];
+    $apiActions = ['cargarCampings', 'mostrarFavoritos', 'addFavoritos', 'deleteFavoritos', 'procesarLogin', 'procesarRegistro'];
     
     // Detectar si es una llamada a la API
     if(in_array($action, $apiActions)){
