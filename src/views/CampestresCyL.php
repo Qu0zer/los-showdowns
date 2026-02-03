@@ -12,9 +12,10 @@
 <header class="cabecera">
     <div class="contenido-cabecera">
         <h1>CampestresCyL</h1>
+        <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-principal">
         <?php if(isset($_SESSION['usuario'])): ?>
             <div class="user-info">
-                <span>Campista, <?=htmlspecialchars($_SESSION['usuario']->getUsername())?></span>
+                <div class="user-name">Campista, <?=htmlspecialchars($_SESSION['usuario']->getUsername())?></div>
                 <a href="index.php?action=logout">
                     <button class="boton-estilo" id="boton-logout">💀 Cerrar Sesión</button>
                 </a>
