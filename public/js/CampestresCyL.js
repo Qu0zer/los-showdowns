@@ -124,6 +124,11 @@ function mostrarInformacionEnContenedor(camping) {
         return;
     }
     
+    // Verificar si el usuario está autenticado
+    const userInfo = document.querySelector('.user-info');
+    const isAuthenticated = userInfo !== null;
+    console.log('🔐 Usuario autenticado:', isAuthenticated);
+    
     // Limpiar contenedor
     contenedor.innerHTML = '';
     
@@ -218,6 +223,16 @@ function mostrarInformacionEnContenedor(camping) {
     coordenadas.className = 'camping-coordenadas';
     coordenadas.textContent = `📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}`;
     mainContainer.appendChild(coordenadas);
+    
+    // Botón de favoritos (solo si está autenticado)
+    if (isAuthenticated) {
+        const favButton = document.createElement('button');
+        favButton.className = 'boton-estilo boton-favorito';
+        favButton.textContent = '⭐ Agregar a Favoritos';
+        favButton.style.marginTop = '15px';
+        favButton.onclick = () => agregarAFavoritos(camping.n_registro, favButton);
+        mainContainer.appendChild(favButton);
+    }
     
     // Añadir al contenedor
     contenedor.appendChild(mainContainer);
@@ -448,6 +463,79 @@ function mostrarErrorClima() {
 }
 
 // ============================================
-// 8. EJECUTAR AL CARGAR LA PÁGINA
+// 8. SISTEMA DE FAVORITOS
+// ============================================
+async function agregarAFavoritos(campingId, button) {
+    console.log('⭐ Agregando a favoritos:', campingId);
+    
+    // Deshabilitar botón y cambiar texto
+    button.disabled = true;
+    const textoOriginal = button.textContent;
+    button.textContent = '⏳ Procesando...';
+    
+    try {
+        const response = await fetch('index.php?action=addFavoritos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id_camping: campingId })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('📦 Add Favorite Response:', data);
+        
+        if (data.success) {
+            console.log('✅ Favorito agregado correctamente');
+            button.textContent = '✅ Agregado a Favoritos';
+            mostrarNotificacion('Camping agregado a favoritos', 'success');
+            
+            // Restaurar botón después de 2 segundos
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = textoOriginal;
+            }, 2000);
+            
+        } else {
+            console.error('❌ Error al agregar:', data);
+            button.disabled = false;
+            button.textContent = textoOriginal;
+            mostrarNotificacion(data.message || 'Error al agregar favorito', 'error');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error agregando favorito:', error);
+        button.disabled = false;
+        button.textContent = textoOriginal;
+        mostrarNotificacion('Error de conexión al agregar', 'error');
+    }
+}
+
+function mostrarNotificacion(mensaje, tipo) {
+    console.log(`📢 Notificación [${tipo}]:`, mensaje);
+    
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification ${tipo}`;
+    
+    // Añadir icono según tipo
+    const icono = tipo === 'success' ? '✅ ' : '❌ ';
+    notification.textContent = icono + mensaje;
+    
+    // Añadir al body
+    document.body.appendChild(notification);
+    
+    // Auto-eliminar después de 3 segundos
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// ============================================
+// 9. EJECUTAR AL CARGAR LA PÁGINA
 // ============================================
 document.addEventListener('DOMContentLoaded', iniciarAplicacion);

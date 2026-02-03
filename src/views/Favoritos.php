@@ -43,6 +43,10 @@
             <p>Aquí encontrarás todos los campings que has marcado como favoritos</p>
         </div>
         
+        <!-- Contenedor para tarjetas dinámicas -->
+        <div class="lista-favoritos"></div>
+        
+        <!-- Mensaje vacío (se oculta cuando hay favoritos) -->
         <div class="mensaje-vacio">
             <h3>🏕️ Aún no tienes campings favoritos</h3>
             <p>Explora el mapa y agrega campings a tus favoritos haciendo clic en el botón ⭐ de cada camping.</p>
@@ -55,5 +59,8 @@
     <footer class="pie-de-pagina">
         <p>&copy; 2026 CampestresCyL. Todos los derechos reservados.</p>
     </footer>
+    
+    <!-- Script de Favoritos -->
+    <script src="./js/Favoritos.js"></script>
 </body>
 </html>

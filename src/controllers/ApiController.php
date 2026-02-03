@@ -195,7 +195,7 @@
                 return ['success' => false, 'message' => 'Usuario no autenticado'];
             }
             
-            $id_usuario = $_SESSION['usuario']['id'];
+            $id_usuario = $_SESSION['usuario']->getId();
             $favoritos = Favoritos::obtenerCampingsPorUsuario($pdo, $id_usuario);
             return ['success' => true, 'data' => $favoritos];
         }
@@ -211,7 +211,7 @@
                 return ['success' => false, 'message' => 'ID de camping requerido'];
             }
 
-            $id_usuario = $_SESSION['usuario']['id'];
+            $id_usuario = $_SESSION['usuario']->getId();
             $id_camping = $input['id_camping'];
             
             return Favoritos::agregarFavorito($pdo, $id_usuario, $id_camping);
@@ -228,7 +228,7 @@
                 return ['success' => false, 'message' => 'ID de camping requerido'];
             }
 
-            $id_usuario = $_SESSION['usuario']['id'];
+            $id_usuario = $_SESSION['usuario']->getId();
             $id_camping = $input['id_camping'];
             
             return Favoritos::eliminarFavorito($pdo, $id_usuario, $id_camping);
