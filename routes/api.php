@@ -11,7 +11,9 @@
                 'guardarCampings' => 'guardarCampings',
                 'mostrarFavoritos' => 'mostrarFavoritos',
                 'addFavoritos' => 'addFavoritos',
-                'deleteFavoritos' => 'deleteFavoritos'
+                'deleteFavoritos' => 'deleteFavoritos',
+                'procesarLogin' => 'procesarLogin',
+                'procesarRegistro' => 'procesarRegistro'
             ];
             
             if(isset($allowedApiActions[$action])){
@@ -43,6 +45,24 @@
                             echo json_encode($resultado);
                         } else {
                             echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+                        }
+                        break;
+                    case 'procesarLogin':
+                        if($api_method === 'POST'){
+                            $authController = new \Controllers\AuthController();
+                            $resultado = $authController->procesarLoginApi($pdo);
+                            echo json_encode($resultado);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Método POST requerido']);
+                        }
+                        break;
+                    case 'procesarRegistro':
+                        if($api_method === 'POST'){
+                            $authController = new \Controllers\AuthController();
+                            $resultado = $authController->procesarRegistroApi($pdo);
+                            echo json_encode($resultado);
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Método POST requerido']);
                         }
                         break;
                     default:

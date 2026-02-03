@@ -79,18 +79,40 @@ function mostrarError(elemento, mensaje) {
     }, 5000);
 }
 
-// Función para simular registro de usuario
-function registrarUsuario(nombre, email, password, mensajeExito) {
-    // Aquí conectarías con tu backend para registrar el usuario
-    console.log('Registrando usuario:', { nombre, email });
+// Función para registrar usuario mediante API
+async function registrarUsuario(nombre, email, password, mensajeExito) {
+    const mensajeError = document.getElementById('mensajeError');
     
-    // Simulación de registro exitoso
-    mensajeExito.style.display = 'block';
-    
-    // Redirigir al login después de 2 segundos
-    setTimeout(() => {
-        window.location.href = 'index.php?action=login';
-    }, 2000);
+    try {
+        const response = await fetch('index.php?action=procesarRegistro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nombre: nombre,
+                email: email,
+                password: password
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            mensajeExito.textContent = data.message;
+            mensajeExito.style.display = 'block';
+            
+            // Redirigir al login después de 2 segundos
+            setTimeout(() => {
+                window.location.href = 'index.php?action=login';
+            }, 2000);
+        } else {
+            mostrarError(mensajeError, data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarError(mensajeError, 'Error de conexión. Por favor, intenta de nuevo.');
+    }
 }
 
 // Validación en tiempo real de confirmación de contraseña

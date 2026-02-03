@@ -22,11 +22,19 @@ class Usuario {
     public function getEmail() { return $this->email; }
 
     // Método estático para iniciar sesión
-    public static function login($pdo, $email, $password){
-        $sql = "SELECT * FROM usuarios WHERE email = :email"; 
+    public static function login($pdo, $identifier, $password){
+        // Detectar si el identificador es un email o un username
+        if(filter_var($identifier, FILTER_VALIDATE_EMAIL)){
+            // Es un email válido
+            $sql = "SELECT * FROM usuarios WHERE email = :identifier";
+        } else {
+            // Es un username
+            $sql = "SELECT * FROM usuarios WHERE nombre_usuario = :identifier";
+        }
+        
         try{
             $sentencia = $pdo->prepare($sql);
-            $sentencia->execute([':email' => $email]);
+            $sentencia->execute([':identifier' => $identifier]);
             $datosUsuario = $sentencia->fetch(\PDO::FETCH_ASSOC);
 
             if($datosUsuario && password_verify($password, $datosUsuario['password'])){

@@ -5,6 +5,7 @@
     --verde-oscuro: #2e7d32;
     --amarillo-fondo: #fffde7;
     --blanco: #ffffff;
+    --rojo:  #ff0000;
 }
 
 body {
@@ -74,6 +75,10 @@ body {
     display: inline-block;
 }
 
+#boton-logout{
+    background-color: var(--rojo);
+}
+
 .boton-estilo:hover, #boton-favoritos:hover {
     background-color: var(--verde-oscuro);
     transform: translate(2px, 2px);
@@ -81,7 +86,7 @@ body {
 }
 
 /* --- POSICIONAMIENTO EN LA ESQUINA SUPERIOR DERECHA DE LA WEB --- */
-.botones-superiores {
+.botones-superiores, .user-info {
     position: fixed;
     top: 20px;
     right: 20px;

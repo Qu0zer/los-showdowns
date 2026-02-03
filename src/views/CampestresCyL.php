@@ -12,11 +12,19 @@
 <header class="cabecera">
     <div class="contenido-cabecera">
         <h1>CampestresCyL</h1>
-        <div class="botones-superiores">
-            <a href="index.php?action=login"><button class="boton-estilo">Inicio-sesion</button></a>
-            <a href="index.php?action=registro"><button class="boton-estilo">Registrarse</button></a>
-        </div>
-        <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
+        <?php if(isset($_SESSION['usuario'])): ?>
+            <div class="user-info">
+                <span>Campista, <?=htmlspecialchars($_SESSION['usuario']->getUsername())?></span>
+                <a href="index.php?action=logout">
+                    <button class="boton-estilo" id="boton-logout">💀 Cerrar Sesión</button>
+                </a>
+            </div>
+        <?php else: ?>
+            <div class="botones-superiores">
+                <a href="index.php?action=login"><button class="boton-estilo">Inicio-sesion</button></a>
+                <a href="index.php?action=registro"><button class="boton-estilo">Registrarse</button></a>
+            </div>
+        <?php endif; ?>
         <div class="acciones">
             <a href="index.php?action=favoritos">
                 <button class="boton-estilo">⭐ Favoritos</button>
