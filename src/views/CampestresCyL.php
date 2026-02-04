@@ -42,20 +42,19 @@
             <h2>Mapa interactivo de Castilla y León</h2>
         </div>
         <div id="mapa-interactivo"></div>
-        
-        <!-- Sección del clima -->
-        <div class="clima-actual">
-            <h3>🌤️ Clima en Castilla y León</h3>
-            <div id="clima-contenido">
-                <p>Cargando información del clima...</p>
-            </div>
-        </div>
     </section>
     <div class="informaion">
         <h3>Información sobre los campings</h3>
         <p>Cargando campings desde la API oficial...</p>
     </div>
 </main>
+
+<section class="campings-sin-coordenadas">
+    <h2>🏕️ Campings sin Ubicación en Mapa</h2>
+    <p class="descripcion-seccion">Estos campings no tienen coordenadas disponibles pero puedes ver su información aquí</p>
+    <div class="lista-campings-sin-coords"></div>
+</section>
+
 <footer class="pie-de-pagina">
     <p>&copy; 2026 CampestresCyL. Todos los derechos reservados.</p>
 </footer>

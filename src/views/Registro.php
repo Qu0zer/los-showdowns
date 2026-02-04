@@ -47,7 +47,10 @@
                 
                 <div class="form-grupo checkbox-grupo">
                     <input type="checkbox" id="terminos" name="terminos" required>
-                    <label for="terminos">Acepto los términos y condiciones</label>
+                    <label for="terminos" class="label-con-tooltip">
+                        Acepto los términos y condiciones
+                        <span class="tooltip">¡Acepta ser feliz y disfrutar yendo de camping!</span>
+                    </label>
                 </div>
                 
                 <button type="submit" class="btn-registro">📝 Crear Cuenta</button>

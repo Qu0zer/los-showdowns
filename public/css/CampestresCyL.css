@@ -248,20 +248,6 @@ body {
         flex: 1;
     }
     
-    .clima-actual {
-        margin-top: 15px;
-        padding: 15px;
-    }
-    
-    .clima-actual h3 {
-        font-size: 1.5rem;
-    }
-    
-    .clima-info {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
     .mapa {
         flex-direction: column;
         align-items: stretch;
@@ -343,54 +329,6 @@ body {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     z-index: 1;
     overflow: hidden; /* Evita que el contenido se desborde */
-}
-
-/* --- SECCIÓN DEL CLIMA --- */
-.clima-actual {
-    background-color: var(--blanco);
-    border: 3px solid var(--azul-oscuro);
-    border-radius: 15px;
-    padding: 20px;
-    margin-top: 20px;
-    box-shadow: 6px 6px 0px var(--azul-oscuro);
-    transition: all 0.2s ease;
-}
-
-.clima-actual h3 {
-    font-family: 'Chiller', cursive;
-    font-size: 1.8rem;
-    color: var(--verde-oscuro);
-    text-align: center;
-    margin: 0 0 15px 0;
-    border-bottom: 2px solid var(--azul-oscuro);
-    padding-bottom: 10px;
-}
-
-#clima-contenido {
-    text-align: center;
-    font-size: 1rem;
-    color: #333;
-}
-
-.clima-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.clima-item {
-    background-color: var(--amarillo-fondo);
-    padding: 10px;
-    border-radius: 8px;
-    border: 2px solid var(--verde-principal);
-    text-align: center;
-}
-
-.clima-item strong {
-    color: var(--verde-oscuro);
-    display: block;
-    margin-bottom: 5px;
 }
 
 .informaion {
@@ -479,42 +417,137 @@ body {
     color: #999;
 }
 
-/* --- ESTILOS PARA CLIMA --- */
-.clima-temperatura-container {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+/* --- SECCIÓN CAMPINGS SIN COORDENADAS --- */
+.campings-sin-coordenadas {
+    width: 100%;
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 30px 20px;
+    background-color: var(--blanco);
+    border: 3px solid var(--azul-oscuro);
+    border-radius: 15px;
+    box-shadow: 6px 6px 0px var(--azul-oscuro);
 }
 
-.clima-icono {
-    font-size: 2rem;
-}
-
-.clima-temperatura {
+.campings-sin-coordenadas h2 {
+    font-family: 'Chiller', cursive;
+    font-size: 2.5rem;
     color: var(--verde-oscuro);
+    margin: 0 0 10px 0;
+    text-align: center;
+    border-bottom: 2px solid var(--azul-oscuro);
+    padding-bottom: 10px;
+    font-weight: bold;
 }
 
-.clima-descripcion {
-    margin: 10px 0;
-    color: #666;
+.descripcion-seccion {
+    text-align: center;
+    color: var(--azul-oscuro);
+    font-size: 1.1rem;
+    margin: 0 0 30px 0;
 }
 
-.clima-referencia {
-    font-size: 0.8rem;
-    color: #999;
-    margin-top: 15px;
+.lista-campings-sin-coords {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
 }
 
-.clima-error-container {
-    color: #666;
+.camping-card-sin-coords {
+    flex: 0 0 calc(25% - 15px);
+    min-width: 250px;
+    background-color: var(--blanco);
+    border: 3px solid var(--azul-oscuro);
+    border-radius: 15px;
+    box-shadow: 6px 6px 0px var(--azul-oscuro);
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-.clima-error-mensaje {
-    margin: 0;
+.camping-card-sin-coords:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--azul-oscuro);
 }
 
-.clima-error-subtitulo {
-    font-size: 0.8rem;
+.camping-icono-sin-ubicacion {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.camping-nombre {
+    font-size: 1.3rem;
+    color: var(--verde-oscuro);
+    margin: 0 0 15px 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.camping-provincia,
+.camping-municipio {
+    font-size: 0.95rem;
+    color: var(--azul-oscuro);
+    margin: 8px 0;
+    width: 100%;
+}
+
+.camping-provincia strong,
+.camping-municipio strong {
+    color: var(--verde-principal);
+}
+
+.mensaje-vacio {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    padding: 40px;
+    width: 100%;
+}
+
+.camping-sin-coordenadas-info {
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Responsive para campings sin coordenadas */
+@media (max-width: 1024px) {
+    .camping-card-sin-coords {
+        flex: 0 0 calc(33.333% - 14px);
+    }
+}
+
+@media (max-width: 768px) {
+    .campings-sin-coordenadas {
+        padding: 20px 15px;
+        margin: 20px auto;
+    }
+    
+    .campings-sin-coordenadas h2 {
+        font-size: 2rem;
+    }
+    
+    .camping-card-sin-coords {
+        flex: 0 0 calc(50% - 10px);
+    }
+}
+
+@media (max-width: 480px) {
+    .campings-sin-coordenadas h2 {
+        font-size: 1.8rem;
+    }
+    
+    .camping-card-sin-coords {
+        flex: 0 0 100%;
+    }
 }
 
 /* --- PIE DE PÁGINA --- */

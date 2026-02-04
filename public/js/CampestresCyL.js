@@ -218,11 +218,18 @@ function mostrarInformacionEnContenedor(camping) {
     separador2.className = 'camping-separador';
     mainContainer.appendChild(separador2);
     
-    // Coordenadas
-    const coordenadas = document.createElement('p');
-    coordenadas.className = 'camping-coordenadas';
-    coordenadas.textContent = `📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}`;
-    mainContainer.appendChild(coordenadas);
+    // Coordenadas (solo si son válidas)
+    if (camping.latitud && camping.longitud && camping.latitud !== 0 && camping.longitud !== 0) {
+        const coordenadas = document.createElement('p');
+        coordenadas.className = 'camping-coordenadas';
+        coordenadas.textContent = `📍 Coordenadas: ${camping.latitud.toFixed(4)}, ${camping.longitud.toFixed(4)}`;
+        mainContainer.appendChild(coordenadas);
+    } else {
+        const sinCoordenadas = document.createElement('p');
+        sinCoordenadas.className = 'camping-sin-coordenadas-info';
+        sinCoordenadas.textContent = '📍 Este camping no tiene coordenadas disponibles';
+        mainContainer.appendChild(sinCoordenadas);
+    }
     
     // Botón de favoritos (solo si está autenticado)
     if (isAuthenticated) {
@@ -283,10 +290,7 @@ async function iniciarAplicacion() {
         // 1. Inicializar mapa
         inicializarMapa();
         
-        // 2. Obtener clima actual (en paralelo)
-        obtenerClimaActual();
-        
-        // 3. Cargar campings desde backend (BD)
+        // 2. Cargar campings desde backend (BD)
         const campings = await cargarCampingsDesdeBackend();
         
         if (campings.length === 0) {
@@ -294,8 +298,11 @@ async function iniciarAplicacion() {
             return;
         }
         
-        // 4. Visualizar en mapa
+        // 3. Visualizar en mapa (solo con coordenadas)
         visualizarCampingsEnMapa(campings);
+        
+        // 4. Cargar campings sin coordenadas en sección inferior
+        cargarCampingsSinCoordenadas(campings);
         
         console.log('✅ === APLICACIÓN INICIADA CORRECTAMENTE ===');
     } catch (error) {
@@ -304,162 +311,132 @@ async function iniciarAplicacion() {
 }
 
 // ============================================
-// 7. FUNCIONALIDAD DEL CLIMA
+// 7. CAMPINGS SIN COORDENADAS
 // ============================================
-async function obtenerClimaActual() {
-    console.log('🌤️ Obteniendo clima actual...');
+function cargarCampingsSinCoordenadas(todosCampings) {
+    console.log('🔄 Filtrando campings sin coordenadas...');
+    console.log('📊 Total de campings recibidos:', todosCampings.length);
     
-    try {
-        // Usamos Valladolid como referencia para Castilla y León
-        const lat = 41.6523;
-        const lon = -4.7245;
+    // Filtrar campings sin coordenadas válidas
+    const sinCoords = todosCampings.filter(c => {
+        const lat = c.latitud;
+        const lon = c.longitud;
         
-        // API gratuita de OpenWeatherMap (sin necesidad de API key para datos básicos)
-        // Usaremos una API alternativa gratuita
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&timezone=Europe%2FMadrid&forecast_days=1`);
+        // Verificar si las coordenadas son null, undefined, vacías, 0, o NaN
+        const latInvalida = lat === null || lat === undefined || lat === '' || lat === 0 || lat === '0' || isNaN(parseFloat(lat));
+        const lonInvalida = lon === null || lon === undefined || lon === '' || lon === 0 || lon === '0' || isNaN(parseFloat(lon));
         
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('🌤️ Datos del clima recibidos:', data);
-        
-        mostrarClimaEnPagina(data);
-        
-    } catch (error) {
-        console.error('❌ Error obteniendo clima:', error);
-        mostrarErrorClima();
+        return latInvalida || lonInvalida;
+    });
+    
+    console.log(`✅ ${sinCoords.length} campings sin coordenadas encontrados`);
+    
+    // Mostrar los campings sin coordenadas en consola
+    if (sinCoords.length > 0) {
+        console.log('📋 Lista de campings sin coordenadas:');
+        sinCoords.forEach((c, index) => {
+            console.log(`  ${index + 1}. ${c.nombre_camping} - lat: ${c.latitud}, lon: ${c.longitud}`);
+        });
     }
+    
+    renderizarTarjetasCampings(sinCoords);
 }
 
-function mostrarClimaEnPagina(data) {
-    const climaContenido = document.getElementById('clima-contenido');
+function renderizarTarjetasCampings(campings) {
+    console.log('🎨 Renderizando tarjetas...');
+    console.log('📊 Campings a renderizar:', campings.length);
     
-    if (!climaContenido) {
-        console.error('❌ No se encontró el contenedor del clima');
+    const contenedor = document.querySelector('.lista-campings-sin-coords');
+    console.log('📦 Contenedor encontrado:', contenedor !== null);
+    
+    if (!contenedor) {
+        console.error('❌ No se encontró el contenedor .lista-campings-sin-coords');
         return;
     }
     
     // Limpiar contenedor
-    climaContenido.innerHTML = '';
+    contenedor.innerHTML = '';
+    console.log('🧹 Contenedor limpiado');
     
-    const clima = data.current_weather;
-    const temperatura = Math.round(clima.temperature);
-    const velocidadViento = Math.round(clima.windspeed);
-    
-    // Determinar icono del clima basado en el código
-    let iconoClima = '🌤️';
-    let descripcion = 'Parcialmente nublado';
-    
-    if (clima.weathercode === 0) {
-        iconoClima = '☀️';
-        descripcion = 'Despejado';
-    } else if (clima.weathercode <= 3) {
-        iconoClima = '⛅';
-        descripcion = 'Parcialmente nublado';
-    } else if (clima.weathercode <= 48) {
-        iconoClima = '☁️';
-        descripcion = 'Nublado';
-    } else if (clima.weathercode <= 67) {
-        iconoClima = '🌧️';
-        descripcion = 'Lluvia';
-    } else if (clima.weathercode <= 77) {
-        iconoClima = '🌨️';
-        descripcion = 'Nieve';
-    } else {
-        iconoClima = '⛈️';
-        descripcion = 'Tormenta';
+    if (campings.length === 0) {
+        console.log('⚠️ No hay campings para renderizar');
+        const mensaje = document.createElement('p');
+        mensaje.className = 'mensaje-vacio';
+        mensaje.textContent = 'No hay campings sin coordenadas';
+        contenedor.appendChild(mensaje);
+        return;
     }
     
-    // Contenedor de temperatura
-    const tempContainer = document.createElement('div');
-    tempContainer.className = 'clima-temperatura-container';
+    // Crear tarjeta para cada camping
+    console.log('🔨 Creando tarjetas...');
+    campings.forEach((camping, index) => {
+        console.log(`  Creando tarjeta ${index + 1}/${campings.length}: ${camping.nombre_camping}`);
+        const tarjeta = crearTarjetaCampingSinCoords(camping);
+        contenedor.appendChild(tarjeta);
+    });
     
-    const icono = document.createElement('span');
-    icono.className = 'clima-icono';
-    icono.textContent = iconoClima;
-    tempContainer.appendChild(icono);
-    
-    const temp = document.createElement('strong');
-    temp.className = 'clima-temperatura';
-    temp.textContent = ` ${temperatura}°C`;
-    tempContainer.appendChild(temp);
-    
-    climaContenido.appendChild(tempContainer);
-    
-    // Descripción
-    const desc = document.createElement('p');
-    desc.className = 'clima-descripcion';
-    desc.textContent = descripcion;
-    climaContenido.appendChild(desc);
-    
-    // Info del clima
-    const climaInfo = document.createElement('div');
-    climaInfo.className = 'clima-info';
-    
-    // Item temperatura
-    const itemTemp = document.createElement('div');
-    itemTemp.className = 'clima-item';
-    
-    const strongTemp = document.createElement('strong');
-    strongTemp.textContent = '🌡️ Temperatura';
-    itemTemp.appendChild(strongTemp);
-    
-    const textTemp = document.createTextNode(` ${temperatura}°C`);
-    itemTemp.appendChild(textTemp);
-    
-    climaInfo.appendChild(itemTemp);
-    
-    // Item viento
-    const itemViento = document.createElement('div');
-    itemViento.className = 'clima-item';
-    
-    const strongViento = document.createElement('strong');
-    strongViento.textContent = '💨 Viento';
-    itemViento.appendChild(strongViento);
-    
-    const textViento = document.createTextNode(` ${velocidadViento} km/h`);
-    itemViento.appendChild(textViento);
-    
-    climaInfo.appendChild(itemViento);
-    climaContenido.appendChild(climaInfo);
-    
-    // Referencia
-    const referencia = document.createElement('p');
-    referencia.className = 'clima-referencia';
-    referencia.textContent = '📍 Datos de Valladolid (referencia regional)';
-    climaContenido.appendChild(referencia);
-    
-    console.log('✅ Clima mostrado correctamente');
+    console.log(`✅ ${campings.length} tarjetas renderizadas en el DOM`);
+    console.log('📊 Hijos del contenedor:', contenedor.children.length);
 }
 
-function mostrarErrorClima() {
-    const climaContenido = document.getElementById('clima-contenido');
+function crearTarjetaCampingSinCoords(camping) {
+    console.log('🏗️ Creando tarjeta para:', camping.nombre_camping);
     
-    if (!climaContenido) return;
+    // Crear tarjeta
+    const tarjeta = document.createElement('div');
+    tarjeta.className = 'camping-card-sin-coords';
     
-    // Limpiar contenedor
-    climaContenido.innerHTML = '';
+    // Icono
+    const icono = document.createElement('div');
+    icono.className = 'camping-icono-sin-ubicacion';
+    icono.textContent = '📍❌';
+    tarjeta.appendChild(icono);
     
-    // Crear contenedor de error
-    const errorContainer = document.createElement('div');
-    errorContainer.className = 'clima-error-container';
+    // Nombre
+    const nombre = document.createElement('h4');
+    nombre.className = 'camping-nombre';
+    nombre.textContent = camping.nombre_camping;
+    tarjeta.appendChild(nombre);
     
-    // Mensaje principal
-    const mensaje = document.createElement('p');
-    mensaje.className = 'clima-error-mensaje';
-    mensaje.textContent = '⚠️ No se pudo cargar el clima';
-    errorContainer.appendChild(mensaje);
+    // Provincia
+    const provincia = document.createElement('p');
+    provincia.className = 'camping-provincia';
+    const provinciaStrong = document.createElement('strong');
+    provinciaStrong.textContent = 'Provincia: ';
+    provincia.appendChild(provinciaStrong);
+    provincia.appendChild(document.createTextNode(camping.provincia));
+    tarjeta.appendChild(provincia);
     
-    // Subtítulo
-    const subtitulo = document.createElement('p');
-    subtitulo.className = 'clima-error-subtitulo';
-    subtitulo.textContent = 'Inténtalo más tarde';
-    errorContainer.appendChild(subtitulo);
+    // Municipio
+    const municipio = document.createElement('p');
+    municipio.className = 'camping-municipio';
+    const municipioStrong = document.createElement('strong');
+    municipioStrong.textContent = 'Municipio: ';
+    municipio.appendChild(municipioStrong);
+    municipio.appendChild(document.createTextNode(camping.municipio));
+    tarjeta.appendChild(municipio);
     
-    // Añadir al contenedor
-    climaContenido.appendChild(errorContainer);
+    // Click handler - adaptar estructura para mostrarInformacionEnContenedor
+    tarjeta.addEventListener('click', () => {
+        const campingAdaptado = {
+            nombre: camping.nombre_camping,
+            provincia: camping.provincia,
+            municipio: camping.municipio,
+            localidad: camping.localidad,
+            direccion: camping.direccion,
+            telefono: camping.telefono,
+            email: camping.email,
+            web: camping.web,
+            plazas: camping.plazas,
+            n_registro: camping.n_registro,
+            latitud: 0,
+            longitud: 0
+        };
+        mostrarInformacionEnContenedor(campingAdaptado);
+    });
+    
+    console.log('✅ Tarjeta creada correctamente');
+    return tarjeta;
 }
 
 // ============================================

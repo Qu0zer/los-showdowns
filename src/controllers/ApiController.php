@@ -142,9 +142,14 @@
                     }
                     
                     // Validar coordenadas
-                    if (empty($lat) || empty($lon) || $lat < 40.0 || $lat > 43.5 || $lon < -7.5 || $lon > -1.5) {
+                    $coordenadasValidas = !empty($lat) && !empty($lon) && 
+                                         $lat >= 40.0 && $lat <= 43.5 && 
+                                         $lon >= -7.5 && $lon <= -1.5;
+                    
+                    if (!$coordenadasValidas) {
                         $sinCoordenadas++;
-                        continue;
+                        $lat = null;
+                        $lon = null;
                     }
                     
                     // Extraer datos necesarios
