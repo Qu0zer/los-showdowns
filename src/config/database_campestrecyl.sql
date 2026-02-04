@@ -28,8 +28,8 @@ CREATE TABLE Campings (
     email VARCHAR(255) NOT NULL,
     web VARCHAR(255),
     plazas INT,
-    latitud DECIMAL(10, 8) NOT NULL,
-    longitud DECIMAL(11, 9) NOT NULL,
+    latitud DECIMAL(10, 8),
+    longitud DECIMAL(11, 9),
     PRIMARY KEY (n_registro)
 ) ENGINE=InnoDB;
 
