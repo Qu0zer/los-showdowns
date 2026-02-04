@@ -1,13 +1,5 @@
 RewriteEngine On
 
-# Redirigir todas las rutas no encontradas al index.php
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?action=404 [QSA,L]
-
-# Página de error personalizada para archivos no encontrados
-ErrorDocument 404 /index.php?action=404
-
 # Configuraciones de seguridad adicionales
 <Files "*.php">
     Order Allow,Deny
