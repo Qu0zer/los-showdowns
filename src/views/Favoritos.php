@@ -12,7 +12,7 @@
     <header class="cabecera">
         <div class="contenido-cabecera">
             <h1>CampestresCyL</h1>
-            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-principal">
+            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-principal" loading="lazy">
             <?php if(isset($_SESSION['usuario'])): ?>
                 <div class="user-info">
                     <div class="user-name">Campista, <?=htmlspecialchars($_SESSION['usuario']->getUsername())?></div>
@@ -61,6 +61,6 @@
     </footer>
     
     <!-- Script de Favoritos -->
-    <script src="./js/Favoritos.js"></script>
+    <script src="./js/Favoritos.js" defer></script>
 </body>
 </html>

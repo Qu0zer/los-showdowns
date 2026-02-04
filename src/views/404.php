@@ -16,7 +16,7 @@
             <a href="index.php?action=login"><button class="boton-estilo">⭐ Inicio-sesion</button></a>
             <a href="index.php?action=registro"><button class="boton-estilo">⭐ Registrarse</button></a>
         </div>
-        <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo">
+        <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" class="logo-principal" alt="Logo" loading="lazy">
         <div class="acciones">
             <a href="index.php">
                 <button class="boton-estilo">🏠 Volver al inicio</button>
@@ -35,7 +35,7 @@
         </div>
         
         <div class="camping-ilustracion">
-            <img src="./images/CamPiMG/Campestre.png" alt="Camping ilustración" class="imagen-camping">
+            <img src="./images/CamPiMG/Campestre.png" alt="Camping ilustración" class="imagen-camping" loading="lazy">
         </div>
         
         <div class="acciones-404">
@@ -56,6 +56,6 @@
     <p>&copy; 2026 CampestresCyL. Todos los derechos reservados.</p>
 </footer>
 
-<script src="./js/404.js"></script>
+<script src="./js/404.js" defer></script>
 </body>
 </html>

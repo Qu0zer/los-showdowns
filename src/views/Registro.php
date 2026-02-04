@@ -11,7 +11,7 @@
     
     <div class="contenedor-registro">
         <div class="card-registro">
-            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-registro">
+            <img src="./images/CamPiMG/Logo CampestresCyL.jpeg" alt="Logo CampestresCyL" class="logo-registro" loading="lazy">
             
             <h1>Crear Cuenta</h1>
             <p>Únete a la comunidad de CampestresCyL</p>
@@ -62,6 +62,6 @@
         </div>
     </div>
 
-    <script src="./js/Registro.js"></script>
+    <script src="./js/Registro.js" defer></script>
 </body>
 </html>
