@@ -17,6 +17,11 @@ RewriteEngine On
     Deny from all
 </Files>
 
+<Files ".env">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
 # Habilitar compresión
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain

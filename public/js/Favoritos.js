@@ -223,7 +223,6 @@ function mostrarNotificacion(mensaje, tipo) {
 // ============================================
 // 5. INICIALIZACIÓN
 // ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Favoritos.js inicializado');
-    cargarFavoritos();
-});
+// Con defer, el script ya se ejecuta después del DOM
+console.log('🚀 Favoritos.js inicializado');
+cargarFavoritos();

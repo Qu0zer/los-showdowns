@@ -1,2 +1,6 @@
+# Carpetas que no se envían a Github
 /vendor/
 /.kiro/
+
+# Variables de entorno (NUNCA subir a GitHub)
+.env

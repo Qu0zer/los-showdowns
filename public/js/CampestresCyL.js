@@ -515,4 +515,5 @@ function mostrarNotificacion(mensaje, tipo) {
 // ============================================
 // 9. EJECUTAR AL CARGAR LA PÁGINA
 // ============================================
-document.addEventListener('DOMContentLoaded', iniciarAplicacion);
+// Con defer, el script ya se ejecuta después del DOM
+iniciarAplicacion();
