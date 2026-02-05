@@ -1,16 +1,34 @@
 <?php
-    /*
-    Controller de la API pública de Campings del Portal de Datos Abiertos de Castilla y León
-    */
-    namespace Controllers;
+/**
+ * ApiController - Controlador de API para gestión de campings
+ * 
+ * Controlador responsable de sincronizar datos de campings desde la API pública
+ * del Portal de Datos Abiertos de Castilla y León hacia la base de datos local.
+ * También gestiona las operaciones CRUD de favoritos de usuarios.
+ * 
+ * @package Controllers
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+namespace Controllers;
 
-    use Models\Campings;
-    use Models\Favoritos;
+use Models\Campings;
+use Models\Favoritos;
 
-    class ApiController {
-        
-        // Función para guardar campings desde API externa de Castilla y León
-        public function guardarCampings($pdo){
+class ApiController {
+    
+    /**
+     * Sincroniza campings desde la API externa hacia la base de datos local
+     * 
+     * Proceso completo de sincronización:
+     * 1. Extrae datos de la API pública de Castilla y León
+     * 2. Refactoriza y valida los datos obtenidos
+     * 3. Inserta o actualiza registros en la base de datos
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado de la operación con estadísticas de inserción/actualización
+     */
+    public function guardarCampings($pdo){
             error_log("=== GUARDAR CAMPINGS DESDE API EXTERNA ===");
             
             try {
@@ -80,8 +98,15 @@
             }
         }
         
-        // Función privada para extraer campings desde API pública
-        private function extraerCampingsDesdeAPI(){
+    /**
+     * Extrae campings desde la API pública de Castilla y León
+     * 
+     * Realiza peticiones HTTP a la API del Portal de Datos Abiertos para cada
+     * provincia de Castilla y León, filtrando únicamente establecimientos tipo "Campings".
+     * 
+     * @return array Array de campings en formato raw de la API
+     */
+    private function extraerCampingsDesdeAPI(){
             error_log("🔄 Extrayendo campings desde API pública...");
             
             $provincias = ['León', 'Salamanca', 'Burgos', 'Ávila', 'Soria', 'Segovia', 'Palencia', 'Valladolid', 'Zamora'];
@@ -117,8 +142,17 @@
             return $campingsGlobal;
         }
         
-        // Función privada para refactorizar datos de la API
-        private function refactorizarCampings($campingsRaw){
+    /**
+     * Refactoriza y valida datos de campings obtenidos de la API
+     * 
+     * Transforma el formato raw de la API a un formato normalizado para la BD.
+     * Valida coordenadas geográficas (rango válido para Castilla y León).
+     * Los campings sin coordenadas válidas se guardan con latitud/longitud NULL.
+     * 
+     * @param array $campingsRaw Array de campings en formato raw de la API
+     * @return array Array de campings refactorizados y validados
+     */
+    private function refactorizarCampings($campingsRaw){
             error_log("🔧 Refactorizando datos...");
             
             $campingsRefactorizados = [];
@@ -180,8 +214,17 @@
             
             return $campingsRefactorizados;
         }
-        //función para cargar todos los campings en la base de datos
-        public function cargarCampings($pdo){
+        
+    /**
+     * Carga todos los campings almacenados en la base de datos
+     * 
+     * Obtiene el listado completo de campings desde la BD local.
+     * Utilizado por el frontend para renderizar el mapa y las tarjetas.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Array de campings con todos sus datos
+     */
+    public function cargarCampings($pdo){
             // Cargar campings existentes en la BD
             $allCampings = Campings::cargarCampings($pdo);
             
@@ -194,8 +237,16 @@
             return [];
         }
 
-        // Función para mostrar favoritos de un usuario
-        public function mostrarFavoritos($pdo){
+    /**
+     * Obtiene los campings favoritos de un usuario autenticado
+     * 
+     * Requiere sesión activa. Retorna la lista completa de campings
+     * marcados como favoritos por el usuario actual.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado con success y data (array de campings favoritos)
+     */
+    public function mostrarFavoritos($pdo){
             if(!isset($_SESSION['usuario'])){
                 return ['success' => false, 'message' => 'Usuario no autenticado'];
             }
@@ -205,8 +256,16 @@
             return ['success' => true, 'data' => $favoritos];
         }
 
-        // Función para agregar camping a favoritos
-        public function addFavoritos($pdo){
+    /**
+     * Agrega un camping a la lista de favoritos del usuario
+     * 
+     * Requiere sesión activa y recibe el ID del camping vía JSON.
+     * Previene duplicados automáticamente mediante restricción UNIQUE en BD.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado de la operación (success, message)
+     */
+    public function addFavoritos($pdo){
             if(!isset($_SESSION['usuario'])){
                 return ['success' => false, 'message' => 'Usuario no autenticado'];
             }
@@ -222,8 +281,16 @@
             return Favoritos::agregarFavorito($pdo, $id_usuario, $id_camping);
         }
 
-        // Función para eliminar camping de favoritos
-        public function deleteFavoritos($pdo){
+    /**
+     * Elimina un camping de la lista de favoritos del usuario
+     * 
+     * Requiere sesión activa y recibe el ID del camping vía JSON.
+     * Elimina la relación usuario-camping de la tabla favoritos.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado de la operación (success, message)
+     */
+    public function deleteFavoritos($pdo){
             if(!isset($_SESSION['usuario'])){
                 return ['success' => false, 'message' => 'Usuario no autenticado'];
             }

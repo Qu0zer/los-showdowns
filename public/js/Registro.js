@@ -1,5 +1,25 @@
-// Manejo del formulario de registro
-// Con defer, el script ya se ejecuta después del DOM
+/**
+ * Registro.js - Sistema de Registro de Usuarios
+ * 
+ * Gestiona el formulario de registro con validación en tiempo real.
+ * Funcionalidades principales:
+ * - Validación de campos (email, contraseña, términos)
+ * - Verificación de coincidencia de contraseñas
+ * - Registro mediante API REST
+ * - Feedback visual en tiempo real
+ * 
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+
+// 1. MANEJO DEL FORMULARIO DE REGISTRO
+
+/**
+ * Event listener principal del formulario de registro
+ * 
+ * Captura el submit, valida todos los campos y envía los datos
+ * a la API si las validaciones son correctas.
+ */
 const formRegistro = document.getElementById('formRegistro');
 
 if (formRegistro) {
@@ -56,18 +76,40 @@ if (formRegistro) {
     });
 }
 
-// Función para validar el formulario
+/**
+ * Valida que todos los campos del formulario estén completos
+ * 
+ * @param {string} nombre - Nombre de usuario
+ * @param {string} email - Email del usuario
+ * @param {string} password - Contraseña
+ * @param {string} confirmPassword - Confirmación de contraseña
+ * @param {boolean} terminos - Aceptación de términos y condiciones
+ * @returns {boolean} true si todos los campos están completos
+ */
 function validarFormulario(nombre, email, password, confirmPassword, terminos) {
     return nombre && email && password && confirmPassword && terminos;
 }
 
-// Función para validar email
+/**
+ * Valida el formato de un email usando expresión regular
+ * 
+ * @param {string} email - Email a validar
+ * @returns {boolean} true si el formato es válido
+ */
 function validarEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Función para mostrar errores
+/**
+ * Muestra un mensaje de error en el elemento especificado
+ * 
+ * El mensaje se oculta automáticamente después de 5 segundos.
+ * 
+ * @param {HTMLElement} elemento - Elemento donde mostrar el error
+ * @param {string} mensaje - Texto del mensaje de error
+ * @returns {void}
+ */
 function mostrarError(elemento, mensaje) {
     elemento.textContent = mensaje;
     elemento.style.display = 'block';
@@ -78,7 +120,19 @@ function mostrarError(elemento, mensaje) {
     }, 5000);
 }
 
-// Función para registrar usuario mediante API
+/**
+ * Registra un nuevo usuario mediante la API REST
+ * 
+ * Envía los datos del usuario a la API, procesa la respuesta y
+ * redirige al login si el registro es exitoso.
+ * 
+ * @async
+ * @param {string} nombre - Nombre de usuario
+ * @param {string} email - Email del usuario
+ * @param {string} password - Contraseña del usuario
+ * @param {HTMLElement} mensajeExito - Elemento para mostrar mensaje de éxito
+ * @returns {Promise<void>}
+ */
 async function registrarUsuario(nombre, email, password, mensajeExito) {
     const mensajeError = document.getElementById('mensajeError');
     
@@ -114,8 +168,14 @@ async function registrarUsuario(nombre, email, password, mensajeExito) {
     }
 }
 
-// Validación en tiempo real de confirmación de contraseña
-// Con defer, el script ya se ejecuta después del DOM
+// 2. VALIDACIÓN EN TIEMPO REAL
+
+/**
+ * Validación visual en tiempo real de confirmación de contraseña
+ * 
+ * Cambia el color del borde del campo según si las contraseñas coinciden.
+ * Verde si coinciden, rojo si no coinciden.
+ */
 const password = document.getElementById('password');
 const confirmPassword = document.getElementById('confirmPassword');
 

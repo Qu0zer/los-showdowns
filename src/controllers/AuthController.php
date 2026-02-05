@@ -1,9 +1,20 @@
 <?php
-    namespace Controllers;
+/**
+ * AuthController - Controlador de autenticación de usuarios
+ * 
+ * Gestiona las operaciones de login y registro de usuarios mediante API REST.
+ * Utiliza password_hash() para seguridad de contraseñas y sesiones PHP para
+ * mantener el estado de autenticación.
+ * 
+ * @package Controllers
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+namespace Controllers;
 
-    use Models\Usuario;
+use Models\Usuario;
 
-    class AuthController {
+class AuthController {
         // Función para procesar el login
         /*public function procesarLogin($pdo) {
             $identifier = trim($_POST['email'] ?? '');
@@ -38,8 +49,17 @@
             }
         }*/
 
-        // Función para procesar el login mediante API (JSON)
-        public function procesarLoginApi($pdo) {
+
+    /**
+     * Procesa el inicio de sesión mediante API REST (JSON)
+     * 
+     * Recibe credenciales en formato JSON, valida inputs, verifica contraseña
+     * con password_verify() y crea sesión si las credenciales son correctas.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado de la operación con datos del usuario si success=true
+     */
+    public function procesarLoginApi($pdo) {
             // Leer JSON input
             $jsonData = json_decode(file_get_contents('php://input'), true);
             $identifier = trim($jsonData['identifier'] ?? '');
@@ -73,8 +93,16 @@
             }
         }
 
-        // Función para procesar el registro mediante API (JSON)
-        public function procesarRegistroApi($pdo) {
+    /**
+     * Procesa el registro de nuevos usuarios mediante API REST (JSON)
+     * 
+     * Recibe datos de usuario en formato JSON, valida inputs (incluyendo formato email),
+     * hashea la contraseña con password_hash() y crea el nuevo usuario en BD.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return array Resultado de la operación (success, message)
+     */
+    public function procesarRegistroApi($pdo) {
             // Leer JSON input
             $jsonData = json_decode(file_get_contents('php://input'), true);
             $username = trim($jsonData['nombre'] ?? '');

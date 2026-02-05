@@ -1,14 +1,40 @@
 <?php
-    namespace Controllers;
+/**
+ * WebController - Controlador de vistas y navegación
+ * 
+ * Gestiona el renderizado de todas las vistas HTML de la aplicación.
+ * Controla el acceso a páginas protegidas mediante validación de sesión.
+ * 
+ * @package Controllers
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+namespace Controllers;
 
-    class WebController{
+class WebController{
       
-    // Función con la que mostrar la página inicial 
+    /**
+     * Renderiza la página principal con el mapa interactivo
+     * 
+     * Vista pública accesible sin autenticación. Muestra el mapa de Leaflet
+     * con todos los campings de Castilla y León.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void
+     */
     public function inicio($pdo){
         require dirname(__DIR__) . '/views/CampestresCyL.php';
     }
 
-    // Función con la que mostrar el menú con sus opciones
+    /**
+     * Renderiza la página de favoritos del usuario
+     * 
+     * Vista protegida que requiere autenticación. Muestra los campings
+     * guardados como favoritos por el usuario actual.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void Redirige a login si no hay sesión activa
+     */
     public function favoritos($pdo){
         if(isset($_SESSION['usuario'])){
             $usuario = $_SESSION['usuario'];
@@ -19,7 +45,15 @@
         }
     }
 
-    // Función con la que muestra la página del login
+    /**
+     * Renderiza la página de inicio de sesión
+     * 
+     * Si el usuario ya tiene sesión activa, redirige automáticamente
+     * a la página principal.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void
+     */
     public function login($pdo) {
         if(isset($_SESSION['usuario'])){
             header('Location: index.php?action=inicio');
@@ -29,12 +63,25 @@
         }
     }
 
-    // Función con la que muestra la página del registro
+    /**
+     * Renderiza la página de registro de nuevos usuarios
+     * 
+     * Vista pública para crear nuevas cuentas de usuario.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void
+     */
     public function registro($pdo) {
         require_once dirname(__DIR__) . '/views/Registro.php';
     }
 
-    // Función para cerrar sesión
+    /**
+     * Cierra la sesión del usuario actual
+     * 
+     * Destruye la sesión PHP y redirige a la página principal.
+     * 
+     * @return void
+     */
     public function logout() { 
         session_start();
         session_destroy();
@@ -42,13 +89,27 @@
         exit();
     }
 
-    // Función para mostrar la página 404
+    /**
+     * Renderiza la página de error 404
+     * 
+     * Establece el código HTTP 404 y muestra la vista de error personalizada.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void
+     */
     public function error404($pdo) {
         http_response_code(404);
         require dirname(__DIR__) . '/views/404.php';
     }
 
-    // Función para mostrar la página de consejos
+    /**
+     * Renderiza la página de consejos para campistas
+     * 
+     * Vista pública con información útil y recomendaciones para acampar.
+     * 
+     * @param PDO $pdo Conexión a la base de datos
+     * @return void
+     */
     public function consejos($pdo) {
         require dirname(__DIR__) . '/views/Consejos.php';
     }

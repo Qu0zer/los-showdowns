@@ -1,13 +1,25 @@
-// ============================================
-// VARIABLES GLOBALES
-// ============================================
+/**
+ * CampestresCyL.js - Sistema de Mapa Interactivo de Campings
+ * 
+ * Gestiona el mapa interactivo de Leaflet con todos los campings de Castilla y León.
+ * Funcionalidades principales:
+ * - Renderizado de mapa con marcadores de campings
+ * - Sistema de búsqueda y filtrado en tiempo real
+ * - Gestión de favoritos (agregar/quitar)
+ * - Carga de campings sin coordenadas en sección separada
+ * 
+ * Tecnologías: Leaflet.js, OpenStreetMap, Fetch API
+ * 
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+
+// Variables globales
 let map;
 let marcadores = [];
 let campingsGlobal = []; // Array global con todos los campings
 
-// ============================================
 // 1. INICIALIZAR MAPA
-// ============================================
 function inicializarMapa() {
     console.log('🗺️ Inicializando mapa...');
     
@@ -29,9 +41,7 @@ function inicializarMapa() {
     console.log('✅ Mapa inicializado');
 }
 
-// ============================================
 // 2. CARGAR CAMPINGS DESDE BACKEND (BD)
-// ============================================
 async function cargarCampingsDesdeBackend() {
     console.log('🔄 Cargando campings desde backend (BD)...');
     
@@ -57,9 +67,7 @@ async function cargarCampingsDesdeBackend() {
     }
 }
 
-// ============================================
 // 3. VISUALIZAR CAMPINGS EN EL MAPA
-// ============================================
 function visualizarCampingsEnMapa(campings) {
     console.log('📍 Visualizando campings en el mapa...');
     
@@ -111,9 +119,7 @@ function visualizarCampingsEnMapa(campings) {
     actualizarPanelInfo(campings.length);
 }
 
-// ============================================
 // 4. MOSTRAR INFORMACIÓN EN CONTENEDOR
-// ============================================
 function mostrarInformacionEnContenedor(camping) {
     console.log('📋 Mostrando información de:', camping.nombre);
     
@@ -245,9 +251,7 @@ function mostrarInformacionEnContenedor(camping) {
     contenedor.appendChild(mainContainer);
 }
 
-// ============================================
 // 5. ACTUALIZAR PANEL DE INFORMACIÓN
-// ============================================
 function actualizarPanelInfo(cantidad) {
     const panel = document.querySelector('.informaion');
     if (!panel) return;
@@ -280,9 +284,7 @@ function actualizarPanelInfo(cantidad) {
     panel.appendChild(container);
 }
 
-// ============================================
 // 6. FLUJO PRINCIPAL
-// ============================================
 async function iniciarAplicacion() {
     console.log('🚀 === INICIANDO APLICACIÓN ===');
     
@@ -310,9 +312,7 @@ async function iniciarAplicacion() {
     }
 }
 
-// ============================================
 // 7. CAMPINGS SIN COORDENADAS
-// ============================================
 function cargarCampingsSinCoordenadas(todosCampings) {
     console.log('🔄 Filtrando campings sin coordenadas...');
     console.log('📊 Total de campings recibidos:', todosCampings.length);
@@ -439,9 +439,7 @@ function crearTarjetaCampingSinCoords(camping) {
     return tarjeta;
 }
 
-// ============================================
 // 8. SISTEMA DE FAVORITOS
-// ============================================
 async function agregarAFavoritos(campingId, button) {
     console.log('⭐ Agregando a favoritos:', campingId);
     
@@ -512,8 +510,5 @@ function mostrarNotificacion(mensaje, tipo) {
     }, 3000);
 }
 
-// ============================================
 // 9. EJECUTAR AL CARGAR LA PÁGINA
-// ============================================
-// Con defer, el script ya se ejecuta después del DOM
 iniciarAplicacion();

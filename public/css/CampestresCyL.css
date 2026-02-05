@@ -1,4 +1,24 @@
-/* VARIABLES BÁSICAS */
+/**
+ * CampestresCyL.css - Estilos Principales
+ * 
+ * Hoja de estilos principal de la aplicación CampestresCyL.
+ * Incluye estilos para:
+ * - Layout general y estructura
+ * - Cabecera y navegación
+ * - Mapa interactivo de Leaflet
+ * - Tarjetas de campings
+ * - Sistema de favoritos
+ * - Diseño responsive
+ * 
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+
+/* 
+   VARIABLES CSS GLOBALES
+   Define la paleta de colores principal de la aplicación
+   para mantener consistencia visual en todo el sitio.
+*/
 :root {
     --azul-oscuro: #05070a;
     --verde-principal: #4CAF50;
@@ -8,6 +28,9 @@
     --rojo:  #ff0000;
 }
 
+/* ESTILOS GENERALES DEL BODY
+   Layout principal con Flexbox para footer sticky
+*/
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -18,7 +41,10 @@ body {
     flex-direction: column; /* Elementos en columna */
 }
 
-/* --- CABECERA --- */
+/* 
+   CABECERA
+   Sección superior con logo, título y gradiente
+*/
 .cabecera {
     background-color: var(--azul-oscuro);
     background: linear-gradient(var(--azul-oscuro), #1a1f41);
@@ -26,7 +52,7 @@ body {
     text-align: center;
     border-bottom: 5px solid var(--verde-oscuro);
     color: white;
-    position: relative; 
+    position: relative;
 }
 
 .contenido-cabecera {
@@ -35,7 +61,6 @@ body {
     position: relative;
 }
 
-/* --- CONTENIDO CENTRAL --- */
 .cabecera h1 {
     font-family: 'Chiller', cursive;
     font-size: 3.5rem;
@@ -57,7 +82,11 @@ body {
     transform: scale(1.05);
 }
 
-/* --- ESTILO DE LOS BOTONES --- */
+/* 
+   BOTONES PRINCIPALES
+   Estilo unificado para todos los botones de acción
+   con efecto de sombra 3D y hover
+*/
 .boton-estilo, #boton-favoritos {
     margin-top: 25px;
     background-color: var(--verde-principal);
@@ -85,7 +114,9 @@ body {
     box-shadow: 3px 3px 0px var(--azul-oscuro);
 }
 
-/* --- POSICIONAMIENTO EN LA ESQUINA SUPERIOR DERECHA DE LA WEB --- */
+/* 
+   NAVEGACIÓN Y AUTENTICACIÓN
+*/
 .botones-superiores, .user-info {
     position: fixed;
     top: 20px;
@@ -130,7 +161,9 @@ body {
     margin: 10px 0;
 }
 
-/* --- CONTENIDO PRINCIPAL --- */
+/*
+   CONTENEDOR PRINCIPAL - LAYOUT MAPA
+*/
 .contenedor-principal {
     display: flex;
     flex-direction: row;
@@ -180,7 +213,9 @@ body {
     min-width: 300px;
 }
 
-/* --- BUSCADOR DEL MAPA CON ESTILO DE BOTONES --- */
+/* 
+   BUSCADOR DEL MAPA
+*/
 .buscador-mapa {
     display: flex;
     align-items: center;
@@ -237,7 +272,9 @@ body {
     display: block;
 }
 
-/* Responsive para el contenedor título-buscador */
+/*
+   RESPONSIVE DESIGN - TABLETS Y MÓVILES
+*/
 @media (max-width: 768px) {
     .contenedor-principal {
         flex-direction: column;
@@ -321,6 +358,9 @@ body {
     }
 }
 
+/*
+   MAPA INTERACTIVO DE LEAFLET
+*/
 #mapa-interactivo {
     height: 600px;
     width: 100%;
@@ -331,6 +371,9 @@ body {
     overflow: hidden; /* Evita que el contenido se desborde */
 }
 
+/*
+   PANEL DE INFORMACIÓN LATERAL
+*/
 .informaion {
     flex: 0 0 28%; /* Ocupa exactamente el 28% del ancho */
     min-width: 0; /* Permite que se reduzca si es necesario */
@@ -354,7 +397,9 @@ body {
     margin-bottom: 20px;
 }
 
-/* --- ESTILOS PARA INFORMACIÓN DE CAMPING --- */
+/*
+   INFORMACIÓN DE CAMPING SELECCIONADO
+*/
 .camping-info-container {
     padding: 15px;
     background-color: #f5f5f5;
@@ -395,7 +440,9 @@ body {
     color: #666;
 }
 
-/* --- ESTILOS PARA PANEL DE INFORMACIÓN INICIAL --- */
+/*
+   PANEL DE INFORMACIÓN INICIAL
+*/
 .panel-info-container {
     padding: 15px;
     text-align: center;
@@ -417,7 +464,11 @@ body {
     color: #999;
 }
 
-/* --- SECCIÓN CAMPINGS SIN COORDENADAS --- */
+/*
+   SECCIÓN CAMPINGS SIN COORDENADAS
+   Muestra campings que no tienen ubicación GPS
+   en formato de tarjetas horizontales
+*/
 .campings-sin-coordenadas {
     width: 100%;
     max-width: 1400px;
@@ -518,7 +569,9 @@ body {
     font-size: 0.9rem;
 }
 
-/* Responsive para campings sin coordenadas */
+/*
+   RESPONSIVE - CAMPINGS SIN COORDENADAS
+*/
 @media (max-width: 1024px) {
     .camping-card-sin-coords {
         flex: 0 0 calc(33.333% - 14px);
@@ -550,7 +603,9 @@ body {
     }
 }
 
-/* --- PIE DE PÁGINA --- */
+/*
+   PIE DE PÁGINA
+*/
 .pie-de-pagina {
     background-color: var(--azul-oscuro);
     color: white;

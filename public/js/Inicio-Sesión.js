@@ -1,5 +1,25 @@
-// Manejo del formulario de inicio de sesión
-// Con defer, el script ya se ejecuta después del DOM
+/**
+ * Inicio-Sesión.js - Sistema de Autenticación
+ * 
+ * Gestiona el formulario de inicio de sesión con validación y autenticación.
+ * Funcionalidades principales:
+ * - Validación de campos de login
+ * - Autenticación mediante API REST
+ * - Manejo de errores y feedback visual
+ * - Redirección automática tras login exitoso
+ * 
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
+
+// 1. MANEJO DEL FORMULARIO DE LOGIN
+
+/**
+ * Event listener principal del formulario de inicio de sesión
+ * 
+ * Captura el submit, valida campos y envía credenciales a la API.
+ * Redirige a la página principal si el login es exitoso.
+ */
 const formLogin = document.getElementById('formLogin');
 
 if (formLogin) {

@@ -1,10 +1,29 @@
-// ============================================
-// FAVORITOS.JS - Sistema de Favoritos
-// ============================================
+/**
+ * Favoritos.js - Sistema de Gestión de Favoritos
+ * 
+ * Gestiona la visualización y eliminación de campings favoritos del usuario.
+ * Funcionalidades principales:
+ * - Carga de favoritos desde API REST
+ * - Renderizado dinámico de tarjetas de campings
+ * - Eliminación de favoritos con animación
+ * - Sistema de notificaciones visuales
+ * 
+ * Requiere: Sesión de usuario activa
+ * 
+ * @author Asier Sanz, Jorge Toribio
+ * @version 1.0.0
+ */
 
-// ============================================
 // 1. CARGAR FAVORITOS DESDE API
-// ============================================
+/**
+ * Carga los campings favoritos del usuario desde la API
+ * 
+ * Realiza petición GET a la API, procesa la respuesta y renderiza
+ * las tarjetas de campings o muestra mensaje si no hay favoritos.
+ * 
+ * @async
+ * @returns {Promise<void>}
+ */
 async function cargarFavoritos() {
     console.log('🔄 Cargando favoritos desde API...');
     
@@ -73,9 +92,26 @@ async function cargarFavoritos() {
     }
 }
 
-// ============================================
 // 2. CREAR TARJETA DE CAMPING
-// ============================================
+
+/**
+ * Crea una tarjeta HTML con la información completa de un camping
+ * 
+ * Genera dinámicamente todos los elementos DOM necesarios para mostrar
+ * los datos del camping y el botón de eliminación.
+ * 
+ * @param {Object} camping - Objeto con datos del camping
+ * @param {string} camping.nombre_camping - Nombre del camping
+ * @param {string} camping.n_registro - Número de registro único
+ * @param {string} camping.direccion - Dirección completa
+ * @param {string} camping.provincia - Provincia
+ * @param {string} camping.municipio - Municipio
+ * @param {string} camping.telefono - Teléfono de contacto
+ * @param {string} camping.email - Email de contacto
+ * @param {string} camping.web - Sitio web
+ * @param {string} camping.plazas - Número de plazas disponibles
+ * @returns {HTMLElement} Elemento div con la tarjeta completa
+ */
 function crearTarjetaCamping(camping) {
     console.log('🏕️ Creando tarjeta para:', camping.nombre_camping);
     
@@ -130,9 +166,19 @@ function crearTarjetaCamping(camping) {
     return card;
 }
 
-// ============================================
 // 3. ELIMINAR FAVORITO
-// ============================================
+
+/**
+ * Elimina un camping de la lista de favoritos del usuario
+ * 
+ * Realiza petición DELETE a la API, anima la eliminación de la tarjeta
+ * y actualiza la interfaz mostrando mensaje vacío si es necesario.
+ * 
+ * @async
+ * @param {string} campingId - ID del camping a eliminar
+ * @param {HTMLButtonElement} button - Botón que disparó la acción
+ * @returns {Promise<void>}
+ */
 async function eliminarFavorito(campingId, button) {
     console.log('🗑️ Eliminando favorito:', campingId);
     
@@ -197,9 +243,18 @@ async function eliminarFavorito(campingId, button) {
     }
 }
 
-// ============================================
 // 4. MOSTRAR NOTIFICACIÓN
-// ============================================
+
+/**
+ * Muestra una notificación temporal en pantalla
+ * 
+ * Crea un elemento de notificación con estilo según el tipo (success/error),
+ * lo añade al DOM y lo elimina automáticamente después de 3 segundos.
+ * 
+ * @param {string} mensaje - Texto a mostrar en la notificación
+ * @param {string} tipo - Tipo de notificación ('success' o 'error')
+ * @returns {void}
+ */
 function mostrarNotificacion(mensaje, tipo) {
     console.log(`📢 Notificación [${tipo}]:`, mensaje);
     
@@ -220,9 +275,6 @@ function mostrarNotificacion(mensaje, tipo) {
     }, 3000);
 }
 
-// ============================================
 // 5. INICIALIZACIÓN
-// ============================================
-// Con defer, el script ya se ejecuta después del DOM
 console.log('🚀 Favoritos.js inicializado');
 cargarFavoritos();
