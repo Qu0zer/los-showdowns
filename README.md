@@ -275,21 +275,6 @@ El proyecto incluye optimizaciones ambientales:
 
 ---
 
-## 🧪 Testing
-
-El proyecto está preparado para tests unitarios y property-based testing:
-
-```bash
-# Ejecutar tests (cuando estén implementados)
-./vendor/bin/phpunit tests/
-```
-
-Estructura de tests:
-- `tests/Unit/` - Tests unitarios
-- `tests/Property/` - Tests basados en propiedades (PBT)
-
----
-
 ## 📚 Documentación Adicional
 
 - **Diagramas**: `docs/diagramas/`
@@ -320,8 +305,10 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 
 ## 👥 Autores
 
-- **Desarrollador Principal** - Proyecto Integrado DAW 2025/2026
-- **Asistente de Desarrollo** - Kiro AI (Windsurf IDE)
+**Proyecto Integrado - Ciclo Formativo de Grado Superior DAW (Desarrollo de Aplicaciones Web)**
+
+- **Asier Sanz** - Alumno DAW 2025/2026
+- **Jorge Toribio** - Alumno DAW 2025/2026
 
 ---
 

@@ -25,6 +25,7 @@
                         echo json_encode($campings);
                         break;
                     case 'mostrarFavoritos':
+                        // Endpoint que muestra favoritos
                         $favoritos = $apiController->mostrarFavoritos($pdo);
                         echo json_encode($favoritos);
                         break;
